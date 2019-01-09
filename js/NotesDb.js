@@ -87,7 +87,8 @@ export default class NoteDb
 		if( /^#+ /mg.test( text ) || /^==/mg.test( text ) )
 			is_markdown = true;
 
-		let title = text.trim().split('\n')[0];
+		let title = text.trim().replace(/#/g,' ').split('\n')[0];
+
 		let obj = { id: parseInt(id), text: text, title: title, search: title.toLowerCase(), is_markdown: is_markdown, created: new Date()};
 		console.log("To save",obj);
 
