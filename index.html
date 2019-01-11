@@ -3,27 +3,27 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<!--link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous"-->
 		<script src="js/markdown-it.js"></script>
 		<script src="js/material.min.js"></script>
 		<script src="js/dialog-polyfill.js"></script>
 		<script type="module" src="js/main.js"></script>
 		<!-- link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet" -->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-		<!-- link rel="stylesheet" type="text/css" href="depencies/dialog-polyfill/dialog-polyfill.css" -->
-		<!-- link rel="stylesheet" href="css/material.min.css">
+		<link rel="stylesheet" type="text/css" href="depencies/dialog-polyfill/dialog-polyfill.css" -->
+		<link rel="stylesheet" href="css/material.min.css">
 		<link media="all" rel="stylesheet" href="css/layout.css">
 		<link media="all" rel="stylesheet" href="css/page-note.css">
 		<link media="all" rel="stylesheet" href="css/main.css">
-		<link media="all" rel="stylesheet" href="css/page-preview.css"> -->
+		<link media="all" rel="stylesheet" href="css/page-preview.css">
 
-		<link media="all" rel="stylesheet" href="css/all.css"> -->
+		<!-- link media="all" rel="stylesheet" href="css/all.css"> -->
 		<script>
 			window.addEventListener('load',()=>{
 			    var dialogs = Array.from( document.querySelectorAll('dialog') );
 				dialogs.forEach(i=>dialogPolyfill.registerDialog( i ) );
 			});
 		</script>
+		<script src="https://apis.google.com/js/api.js"></script>
 	</head>
 	<body>
 		<sauna-page id="all-notes">
@@ -48,6 +48,10 @@
 							<button data-note-new="" class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored">
 								<i class="material-icons">add</i>
 							</button>
+							<a href="#page-settings" class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored">
+								<i class="material-icons">settings</i>
+							</a>
+
 						</div>
 					</div>
 				</header>
@@ -130,16 +134,31 @@
 			</dialog>
 		</sauna-page>
 		<sauna-page id="page-settings">
-			<header class="mdl-layout__header">
-				<label class="mdl-button mdl-js-button mdl-button--icon" data-navigation="back">
-					<i class="material-icons">arrow_back_ios</i>
-				</label>
-			</header>
+			<div class="mdl-layout--fixed-header">
+				<header class="mdl-layout__header">
+					<div class="mdl-layout__header-row">
+						<label class="mdl-button mdl-js-button mdl-button--icon" data-navigation="back">
+							<i class="material-icons">arrow_back_ios</i>
+						</label>
+						<div>
+							<span>Settings</span>
+						</div>
+						<div class="mdl-layout-spacer"></div>
+					</div>
+				</header>
+			</div>
+
 			<div>
-				<label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-1">
-					<input type="checkbox" id="switch-1" class="mdl-switch__input" checked>
-					<span class="mdl-switch__label"></span>
-				</label>
+				<div>
+					<label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-1">
+						<input type="checkbox" id="switch-1" class="mdl-switch__input" checked>
+						<span class="mdl-switch__label"></span>
+					</label>
+				</div>
+				<div>
+					<a href="#" id="sync-google">Sync With Google</a>
+					<div id="page-settings-status"></div>
+				</div>
 			</div>
 		</sauna-page>
 	</body>

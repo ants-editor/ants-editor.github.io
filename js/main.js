@@ -2,6 +2,7 @@ import Notes from './NotesDb.js';
 import Navigation from './sauna/Navigation.js';
 import Util from './Util.js';
 import Note from './Note.js';
+import GoogleDrive from './GoogleDrive.js';
 
 //import Util from '../node_modules/diabetes/Util.js';
 //import Navigation from '../node_modules/sauna-spa/js/Navigation.js';
@@ -33,9 +34,9 @@ window.addEventListener('load',()=>
 			let date_str = '';
 			let date = '';
 
-			if( 'created' in note )
+			if( 'updated' in note )
 			{
-				date_str = note.created.toString();
+				date_str = note.updated.toString();
 				date = date_str.substring(0,date_str.indexOf("GMT"));
 			}
 
@@ -97,6 +98,12 @@ window.addEventListener('load',()=>
 		});
 	});
 
+	Util.delegateEvent('click',document.body,'[data-settings]',function(evt)
+	{
+		Util.stopEvent( evt );
+		n.click_anchorHash('#page-settings');
+	});
+
 	Util.delegateEvent('click',document.body,'[data-note-edit]',function(evt)
 	{
 		Util.stopEvent( evt );
@@ -116,6 +123,67 @@ window.addEventListener('load',()=>
 	Util.delegateEvent('click',document.body,'[data-navigation="back"]',()=>
 	{
 		window.history.back();
+	});
+
+
+
+	const CLIENT_ID = '415517813120-0344qthv45ac2ot76kl12at6cfn8q9n2.apps.googleusercontent.com';
+	const API_KEY = 'AIzaSyBGbdQuULcqCnJqoylF_Y0eA-q6-XzS_L8';
+
+	// Array of API discovery doc URLs for APIs used by the quickstart
+
+	// Authorization scopes required by the API; multiple scopes can be
+	// included, separated by spaces.
+	const SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/drive.appdata';
+
+	let google = new GoogleDrive(CLIENT_ID, API_KEY, SCOPES );
+
+	Util.getById('sync-google').addEventListener('click',(evt)=>
+	{
+		Util.stopEvent( evt );
+		//db.getBackup().then((notes)=>
+		//{
+		//	console.log('Backup',notes);
+		//	console.log( JSON.stringify(notes) );
+		//})
+		//.catch((e)=>
+		//{
+		//	console.log('FOOOOO',e);
+		//});
+
+		google.initClient().then((is_signed_in)=>
+		{
+			console.log('Client init');
+			let promise = Promise.resolve(true);
+
+			if( !is_signed_in )
+				promise = google.signIn();
+
+			return promise;
+		})
+		.then(()=>
+		{
+			console.log('Gettting backup');
+			return db.getBackup();
+		})
+		.then((notes)=>
+		{
+			console.log('Backup file prepared to send');
+			let content = JSON.stringify( notes );
+			google.uploadFile('ant-backup.json',content,'application/json')
+			.then((result)=>
+			{
+				console.log('Success',result);
+			})
+			.catch((e)=>
+			{
+				console.log("Upload error", e );
+			});
+		})
+		.catch((other)=>
+		{
+			console.log('Other error',other);
+		});
 	});
 });
 

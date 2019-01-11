@@ -1,0 +1,25 @@
+#preview-page-edit-button
+{
+	color: white;
+}
+
+#preview-page-edit-button:hover {
+    /*background-color: rgba(158,158,158,.2);
+	 *	background-color: #ff4081;
+
+	 * */
+}
+
+#note-preview h1
+{
+	font-size: 35px;
+}
+#note-preview h2
+{
+	font-size: 31px;
+}
+
+#note-preview h3
+{
+	font-size: 28px;
+}

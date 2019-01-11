@@ -9,30 +9,29 @@ export default class NoteDb
 		this.database	= new Finger
 		({
 			name		: 'notes',
-			version	: 6,
+			version	: 7,
 			stores		:{
 				note:
 				{
 					keyPath	: 'id',
-					autoincrement: true,
+					autoincrement: false,
 					indexes	:
 					[
-
 						{ indexName: 'filename', keyPath: 'filename', objectParameters: { uniq: true, multiEntry: false }},
 						{ indexName: 'search', keyPath: 'search', objectParameters: { uniq: false, multiEntry: false }},
 						{ indexName: 'tags' ,keyPath:'tags'	,objectParameters: { uniq: false ,multiEntry: true} },
-						{ indexName: 'created', keyPath:'created', objectParameters:{ uniq: false, multiEntry: false}}
+						{ indexName: 'updated', keyPath:'updated', objectParameters:{ uniq: false, multiEntry: false}}
 					]
 				},
 				attachement:
 				{
 					keyPath	: 'id',
-					autoincrement: true,
+					autoincrement: false,
 					indexes	:
 					[
 						{ indexName: 'filename', keypath: 'filename', objectParameters: {uniq: true, multiEntry: false }},
 						{ indexName: 'note_id', keypath: 'filename', objectParameters:{ uniq: false, multiEntry: false}},
-						{ indexName: 'created', keypath: 'created', objectParameters:{ uniq: false, multiEntry: false}}
+						{ indexName: 'updated', keypath: 'created', objectParameters:{ uniq: false, multiEntry: false}}
 					]
 				}
 			}
@@ -51,7 +50,7 @@ export default class NoteDb
 	getNotes(start, limit)
 	{
 		//return this.database.getAll('note',{ start: start, count: 20 });
-		return this.database.customFilter('note', { index: 'created',direction: "prev", count: 20 }, i=> true);
+		return this.database.customFilter('note', { index: 'updated',direction: "prev", count: 20 }, i=> true);
 	}
 
 	getNote(note_id)
@@ -64,9 +63,10 @@ export default class NoteDb
 		if( text.trim() === "" )
 			return Promise.resolve(0);
 
-		let title = text.trim().split('\n')[0];
+		//let title = text.trim().split('\n')[0];
+		let title = text.trim().replace(/#/g,' ').split('\n')[0].trim();
 
-		return this.database.addItem('note',null,{ text: text, tags: tags, title: title, search: title.toLowerCase(), created: new Date()});
+		return this.database.addItem('note',null,{id: Date.now(), text: text, tags: tags, title: title, search: title.toLowerCase(), updated: new Date()});
 	}
 
 	search(name)
@@ -87,9 +87,9 @@ export default class NoteDb
 		if( /^#+ /mg.test( text ) || /^==/mg.test( text ) )
 			is_markdown = true;
 
-		let title = text.trim().replace(/#/g,' ').split('\n')[0];
+		let title = text.trim().replace(/#/g,' ').split('\n')[0].trim();
 
-		let obj = { id: parseInt(id), text: text, title: title, search: title.toLowerCase(), is_markdown: is_markdown, created: new Date()};
+		let obj = { id: parseInt(id), text: text, title: title, search: title.toLowerCase(), is_markdown: is_markdown, updated: new Date()};
 		console.log("To save",obj);
 
 		return this.database.put('note', obj );
@@ -107,7 +107,7 @@ export default class NoteDb
 
 	getBackup()
 	{
-		return this.database.getAll('notes').then((notes)=>
+		return this.database.getAll('note').then((notes)=>
 		{
 			notes.forEach((n)=>
 			{
