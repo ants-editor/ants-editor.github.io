@@ -134,7 +134,7 @@ window.addEventListener('load',()=>
 
 	// Authorization scopes required by the API; multiple scopes can be
 	// included, separated by spaces.
-	const SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/drive.appdata';
+	const SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/drive';
 
 	let google = new GoogleDrive(CLIENT_ID, API_KEY, SCOPES );
 
