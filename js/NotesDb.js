@@ -115,6 +115,7 @@ export default class NoteDb
 		this.database.close();
 	}
 
+
 	getBackupJson()
 	{
 		return this.database.getAll('note').then((notes)=>

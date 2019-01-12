@@ -232,13 +232,10 @@ Util.addOnLoad(()=>
 		.then(()=>
 		{
 			console.log('Gettting backup');
-			return db.getBackup();
+			return db.getBackupJson();
 		})
-		.then((notes)=>
+		.then((content)=>
 		{
-			console.log('Backup file prepared to send');
-			let content = JSON.stringify( notes );
-
 			google.uploadFile('Ants editor backup','ant-backup.json',content,'application/json')
 			.then((result)=>
 			{
