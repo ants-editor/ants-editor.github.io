@@ -77,22 +77,32 @@ export default class NoteDb
 		return this.database.getAll('note',{ index: 'search', '>=': name, count: 20});
 	}
 
-	saveNote(id, text)
+	saveNote(id, text, force )
 	{
-		if( text.trim() === "" )
-			return Promise.resolve(0);
+		let promise = Promise.resolve( null );
 
-		let is_markdown = false;
+		if( !force )
+			promise = this.getNote( id );
 
-		if( /^#+ /mg.test( text ) || /^==/mg.test( text ) )
-			is_markdown = true;
+		return promise.then((note)=>
+		{
+			if( note && note.text ==  text )
+				return Promise.resolve(0);
 
-		let title = text.trim().replace(/#/g,' ').split('\n')[0].trim();
+			if( text.trim() === "" )
+				return Promise.resolve(0);
 
-		let obj = { id: parseInt(id), text: text, title: title, search: title.toLowerCase(), is_markdown: is_markdown, updated: new Date()};
-		console.log("To save",obj);
+			let is_markdown = false;
 
-		return this.database.put('note', obj );
+			if( /^#+ /mg.test( text ) || /^==/mg.test( text ) )
+				is_markdown = true;
+
+			let title = text.trim().replace(/#/g,' ').split('\n')[0].trim();
+
+			let obj = { id: parseInt(id), text: text, title: title, search: title.toLowerCase(), is_markdown: is_markdown, updated: new Date()};
+
+			return this.database.put('note', obj );
+		});
 	}
 
 	deleteNote(id)
@@ -105,7 +115,7 @@ export default class NoteDb
 		this.database.close();
 	}
 
-	getBackup()
+	getBackupJson()
 	{
 		return this.database.getAll('note').then((notes)=>
 		{
@@ -116,6 +126,26 @@ export default class NoteDb
 			});
 
 			return Promise.resolve( notes );
+		});
+	}
+
+	getBackupUrl()
+	{
+		return this.getBackupJson().then((notes)=>
+		{
+			return this.getDownloadHref( { notes: notes }, 'application/json');
+		});
+	}
+
+	getDownloadHref( object, contentType )
+    {
+		return  new Promise((resolve,reject)=>
+		{
+			let ctype = contentType ? contentType : 'application/json';
+
+        	var blob = new Blob([typeof object === 'string' ? notes : JSON.stringify( object, null, 2)], {type :  ctype });
+        	let objectURL = URL.createObjectURL( blob );
+        	return resolve( objectURL );
 		});
 	}
 }

@@ -190,7 +190,7 @@ export default class GoogleDrive
 
 
 
-	uploadFile( filename, content, contentType )
+	uploadFile( title, filename, content, contentType )
 	{
 		const boundary = '-------314159265358979323846';
 		const delimiter = "\r\n--" + boundary + "\r\n";
@@ -199,7 +199,8 @@ export default class GoogleDrive
 		let ctype = contentType || 'application/octet-stream';
 
 		let metadata = {
-			'title': filename,
+			'title': title,
+			'name': filename,
 			'mimeType': ctype
 		};
 

@@ -3,6 +3,7 @@ import Navigation from './sauna/Navigation.js';
 import Util from './Util.js';
 import Note from './Note.js';
 import GoogleDrive from './GoogleDrive.js';
+import PromiseUtils from './PromiseUtils.js';
 
 //import Util from '../node_modules/diabetes/Util.js';
 //import Navigation from '../node_modules/sauna-spa/js/Navigation.js';
@@ -15,7 +16,7 @@ window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
     return false;
 };
 
-window.addEventListener('load',()=>
+Util.addOnLoad(()=>
 {
 	console.log('load window');
 	let db = new Notes();
@@ -125,6 +126,73 @@ window.addEventListener('load',()=>
 		window.history.back();
 	});
 
+	Util.getById('page-settings-export-button').addEventListener('click',(evt)=>
+	{
+		Util.stopEvent( evt );
+
+		db.getBackupUrl()
+		.then((href)=>
+		{
+			let date = new Date();
+			let btn = Util.getById('page-settings-download-button');
+			btn.setAttribute('download', 'Ants_editor_backup_'+( date.toISOString().substring(0,10) )+'.json');
+			btn.classList.remove('hidden');
+			btn.setAttribute('href',href );
+		})
+		.catch((error)=>
+		{
+			alert('An error occourred please try again');
+		});
+	});
+
+	Util.getById('page-settings-import-button').addEventListener('click',(evt)=>
+	{
+
+		Util.stopEvent( evt );
+
+    	var file    = document.getElementById("page-settings-import-file").files[0];
+    	var reader  = new FileReader();
+
+    	reader.readAsText(file, "UTF-8");
+    	reader.onload = function (evt)
+		{
+    		//document.getElementById("fileContents").innerHTML = evt.target.result;
+    		try
+    		{
+    		    let obj= JSON.parse( evt.target.result );
+
+				let gen = (note)=>
+				{
+					return db.getNote( note.id ).then((a)=>
+					{
+						let date = new Date( note.updated );
+
+						if( !a || date > a.updated )
+							return db.saveNote( note.id, note.text );
+
+						return Promise.resolve( 1 );
+					});
+				};
+
+				PromiseUtils.runSequential( obj.notes, gen )
+				.then(()=>
+				{
+					alert('Import success');
+				})
+				.catch((e)=>
+				{
+					console.log('Error on importing');
+					alert('An error occourred please try again later');
+				});
+			}
+			catch(fileerror)
+			{
+				console.log(fileerror );
+				alert('Error in the file, please try again later');
+			}
+		};
+	});
+
 
 
 	const CLIENT_ID = '415517813120-0344qthv45ac2ot76kl12at6cfn8q9n2.apps.googleusercontent.com';
@@ -170,7 +238,8 @@ window.addEventListener('load',()=>
 		{
 			console.log('Backup file prepared to send');
 			let content = JSON.stringify( notes );
-			google.uploadFile('ant-backup.json',content,'application/json')
+
+			google.uploadFile('Ants editor backup','ant-backup.json',content,'application/json')
 			.then((result)=>
 			{
 				console.log('Success',result);
@@ -186,4 +255,7 @@ window.addEventListener('load',()=>
 		});
 	});
 });
+
+
+
 

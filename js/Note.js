@@ -9,12 +9,12 @@ export default class Note
 		this.debug = true;
 		this.nav = nav;
 		this.notes_db = notes_db;
-		this.id_input = document.getElementById('note-id');
-		this.textarea = document.querySelector('#note textarea');
+		this.id_input = Util.getById('note-id');
+		this.textarea = Util.getFirst('#note textarea');
 		this.attachments = [];
 		this.tags = [];
-		this.edit = document.getElementById('note-edit');
-		this.preview = document.getElementById('note-preview');
+		this.edit = Util.getById('note-edit');
+		this.preview = Util.getById('note-preview');
 
 		Util.getById('note-delete').addEventListener('click',(evt)=>
 		{
