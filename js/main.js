@@ -238,7 +238,16 @@ Util.addOnLoad(()=>
 				if( response.result.files.length )
 					return google.downloadFile( response.result.files[0].id ).then((file_content)=>
 					{
-						return Promise.resolve( JSON.parse( file_content ) );
+						try{
+
+							let obj = JSON.parse( file_content );
+							return Promise.resolve( obj );
+						}
+						catch(parseException)
+						{
+							console.log( parseException );
+							return Promise.resolve({ 'notes': []});
+						}
 					});
 
 				return Promise.resolve({ 'notes': []});
