@@ -13,7 +13,7 @@ n.setPageInit('all-notes');
 
 window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
    console.log("Error occured: " + errorMsg);//or any message
-    return false;
+	return false;
 };
 
 Util.addOnLoad(()=>
@@ -84,13 +84,13 @@ Util.addOnLoad(()=>
 		{
 			var md = window.markdownit(
 			{
-  				html:         false,        // Enable HTML tags in source
-  				xhtmlOut:     false,        // Use '/' to close single tags (<br />)
-  				breaks:       false,        // Convert '\n' in paragraphs into <br>
+  				html:		 false,		// Enable HTML tags in source
+  				xhtmlOut:	 false,		// Use '/' to close single tags (<br />)
+  				breaks:	   false,		// Convert '\n' in paragraphs into <br>
   				langPrefix:   'language-',  // CSS language prefix for fenced blocks
-  				linkify:      true,         // autoconvert URL-like texts to links
-  				typographer:  true,         // Enable smartypants and other sweet transforms
-  			});      // html / src / debug
+  				linkify:	  true,		 // autoconvert URL-like texts to links
+  				typographer:  true,		 // Enable smartypants and other sweet transforms
+  			});	  // html / src / debug
 
 			var result = md.render( note.text );
 			Util.getById('preview-page-edit-button').setAttribute( 'data-note-edit',note.id );
@@ -150,16 +150,16 @@ Util.addOnLoad(()=>
 
 		Util.stopEvent( evt );
 
-    	var file    = document.getElementById("page-settings-import-file").files[0];
-    	var reader  = new FileReader();
+		var file	= document.getElementById("page-settings-import-file").files[0];
+		var reader  = new FileReader();
 
-    	reader.readAsText(file, "UTF-8");
-    	reader.onload = function (evt)
+		reader.readAsText(file, "UTF-8");
+		reader.onload = function (evt)
 		{
-    		//document.getElementById("fileContents").innerHTML = evt.target.result;
-    		try
-    		{
-    		    let obj= JSON.parse( evt.target.result );
+			//document.getElementById("fileContents").innerHTML = evt.target.result;
+			try
+			{
+				let obj= JSON.parse( evt.target.result );
 
 				let gen = (note)=>
 				{
@@ -209,6 +209,8 @@ Util.addOnLoad(()=>
 	Util.getById('sync-google').addEventListener('click',(evt)=>
 	{
 		Util.stopEvent( evt );
+
+
 		//db.getBackup().then((notes)=>
 		//{
 		//	console.log('Backup',notes);
@@ -231,26 +233,36 @@ Util.addOnLoad(()=>
 		})
 		.then(()=>
 		{
-			console.log('Gettting backup');
-			return db.getBackupJson();
+			return google.listFiles('ant-backup.json');
 		})
-		.then((content)=>
+		.then((file_list)=>
 		{
-			google.uploadFile('Ants editor backup','ant-backup.json',content,'application/json')
-			.then((result)=>
-			{
-				console.log('Success',result);
-			})
-			.catch((e)=>
-			{
-				console.log("Upload error", e );
-			});
-		})
-		.catch((other)=>
-		{
-			console.log('Other error',other);
+			console.log( file_list );
 		});
+		//.then(()=>
+		//{
+		//	console.log('Gettting backup');
+		//	return db.getBackupJson();
+		//})
+		//.then((content)=>
+		//{
+		//	google.uploadFile('Ants editor backup','ant-backup.json',content,'application/json')
+		//	.then((result)=>
+		//	{
+		//		console.log('Success',result);
+		//	})
+		//	.catch((e)=>
+		//	{
+		//		console.log("Upload error", e );
+		//	});
+		//})
+		//.catch((other)=>
+		//{
+		//	console.log('Other error',other);
+		//});
 	});
+
+
 });
 
 

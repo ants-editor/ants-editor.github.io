@@ -11,8 +11,8 @@ export default class GoogleDrive
 	load()
 	{
 		/**
-		 *	On load, called to load the auth2 library and API client library.
-		 */
+			*	On load, called to load the auth2 library and API client library.
+			*/
 		return new Promise((resolve,reject)=>
 		{
 			window.gapi.load('client:auth2',()=>
@@ -23,9 +23,9 @@ export default class GoogleDrive
 		});
 	}
 	/**
-	 *	Initializes the API client library and sets up sign-in state
-	 *	listeners.
-	 */
+		*	Initializes the API client library and sets up sign-in state
+		*	listeners.
+		*/
 	initClient()
 	{
 		let DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
@@ -38,57 +38,67 @@ export default class GoogleDrive
 			console.log('Load client and auth2');
 			return window.gapi.client.init
 			({
-			 	apiKey: this.api_key,
-			 	clientId: this.client_id,
-			 	discoveryDocs: DISCOVERY_DOCS,
-			 	scope: this.scopes
+					apiKey: this.api_key,
+					clientId: this.client_id,
+					discoveryDocs: DISCOVERY_DOCS,
+					scope: this.scopes
 			});
 		})
 		.then((xxx)=>
 		{
 			console.log( xxx );
-		 	//window.gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-		 	// Handle the initial sign-in state.
-		 	//updateSigninStatus();
+				//window.gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+				// Handle the initial sign-in state.
+				//updateSigninStatus();
 			return Promise.resolve( window.gapi.auth2.getAuthInstance().isSignedIn.get() );
 		});
 	}
 
 	/**
-	 *	Sign in the user upon button click.
-	 */
+		*	Sign in the user upon button click.
+		*/
 	signIn()
 	{
 		return window.gapi.auth2.getAuthInstance().signIn();
 	}
 
 	/**
-	 *	Sign out the user upon button click.
-	 */
+		*	Sign out the user upon button click.
+		*/
 	signOut()
 	{
 		return window.gapi.auth2.getAuthInstance().signOut();
 	}
 
+	downloadFile( file_id )
+	{
+		return drive.files.get
+		({
+			fileId: fileId,
+			alt: 'media'
+		});
+	}
+
 	/**
-	 * Print files.
-	 */
-	listFiles() {
+		* Print files.
+		*/
+	listFiles( filename ) {
 		return window.gapi.client.drive.files.list({
-		 'pageSize': 10,
-		 'fields': "nextPageToken, files(id, name)"
-		//'q':"'appDataFolder' in parents"
+			'pageSize': 10,
+			'orderBy':'modifiedTime desc',
+			'fields': "nextPageToken, files(id, name)",
+			'q':"'name' = "+filename
 		});/*.then(function(response) {
-		 appendPre('Files:');
-		 let files = response.result.files;
-		 if (files && files.length > 0) {
+			appendPre('Files:');
+			let files = response.result.files;
+			if (files && files.length > 0) {
 			for (let i = 0; i < files.length; i++) {
 				let file = files[i];
 				appendPre(file.name + ' (' + file.id + ')');
 			}
-		 } else {
+			} else {
 			appendPre('No files found.');
-		 }
+			}
 		});*/
 	}
 
@@ -97,8 +107,8 @@ export default class GoogleDrive
 		return new Promise((resolve,reject)=>
 		{
 			let fileMetadata = {
-				 'name': name,
-				 'mimeType': 'application/vnd.google-apps.folder'
+					'name': name,
+					'mimeType': 'application/vnd.google-apps.folder'
 			};
 
 			window.gapi.client.drive.files.create
@@ -119,17 +129,17 @@ export default class GoogleDrive
 	}
 
 	/**
-	 * Print a file's metadata.
-	 * https://developers.google.com/drive/api/v2/reference/files/get#examples
-	 *
-	 * @param {String} fileId ID of the file to print metadata for.
-	 */
+		* Print a file's metadata.
+		* https://developers.google.com/drive/api/v2/reference/files/get#examples
+		*
+		* @param {String} fileId ID of the file to print metadata for.
+		*/
 	printFile(fileId)
 	{
 		return new Promise((resolve,reject)=>
 		{
 			let request = window.gapi.client.drive.files.get({
-			 'fileId': fileId
+				'fileId': fileId
 			});
 			request.execute(function(resp) {
 				console.log('Title: ' + resp.title);
@@ -141,33 +151,33 @@ export default class GoogleDrive
 	}
 
 	/**
-	 * Download a file's content.
-	 * https://developers.google.com/drive/api/v2/reference/files/get#examples
-	 *
-	 * @param {File} file Drive File instance.
-	 * @param {Function} callback Function to call when the request is complete.
-	 */
+		* Download a file's content.
+		* https://developers.google.com/drive/api/v2/reference/files/get#examples
+		*
+		* @param {File} file Drive File instance.
+		* @param {Function} callback Function to call when the request is complete.
+		*/
 	downloadFile(file)
 	{
 		return new Promise((resolve,reject)=>
 		{
-	 		 if (file.downloadUrl) {
-	 			let accessToken = window.gapi.auth.getToken().access_token;
-	 			let xhr = new XMLHttpRequest();
-	 			xhr.open('GET', file.downloadUrl);
-	 			xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-	 			xhr.onload = function() {
+					if (file.downloadUrl) {
+					let accessToken = window.gapi.auth.getToken().access_token;
+					let xhr = new XMLHttpRequest();
+					xhr.open('GET', file.downloadUrl);
+					xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+					xhr.onload = function() {
 					resolve( xhr.responseText );
-	 			};
-	 			xhr.onerror = function() {
+					};
+					xhr.onerror = function() {
 					reject('Unknown error');
-	 			};
-	 			xhr.send();
-	 		 }
-			 else
+					};
+					xhr.send();
+					}
+				else
 			{
-				 reject('Not downloadUrl property on file');
-	 		}
+					reject('Not downloadUrl property on file');
+				}
 		});
 	}
 	/**
@@ -179,13 +189,13 @@ export default class GoogleDrive
 	*/
 
 	base64Encode(str) {
-    // first we use encodeURIComponent to get percent-encoded UTF-8,
-    // then we convert the percent encodings into raw bytes which
-    // can be fed into btoa.
-    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
-        function toSolidBytes(match, p1) {
-            return String.fromCharCode('0x' + p1);
-    }));
+		// first we use encodeURIComponent to get percent-encoded UTF-8,
+		// then we convert the percent encodings into raw bytes which
+		// can be fed into btoa.
+		return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+				function toSolidBytes(match, p1) {
+						return String.fromCharCode('0x' + p1);
+		}));
 	}
 
 
@@ -294,22 +304,22 @@ export default class GoogleDrive
 			initResumable.setRequestHeader('X-Upload-Content-Type', contentType);
 			initResumable.onreadystatechange = function() {
 				if(initResumable.readyState === XMLHttpRequest.DONE && initResumable.status === 200) {
-				 const locationUrl = initResumable.getResponseHeader('Location');
+					const locationUrl = initResumable.getResponseHeader('Location');
 
-				 const reader = new FileReader();
-				 reader.onload = (e) => {
+					const reader = new FileReader();
+					reader.onload = (e) => {
 					const uploadResumable = new XMLHttpRequest();
 					uploadResumable.open('PUT', locationUrl, true);
 					uploadResumable.setRequestHeader('Content-Type', contentType);
 					uploadResumable.setRequestHeader('X-Upload-Content-Type', contentType);
 					uploadResumable.onreadystatechange = function() {
 						if( uploadResumable.readyState === XMLHttpRequest.DONE && uploadResumable.status === 200 ) {
-						 console.log(uploadResumable.response);
+							console.log(uploadResumable.response);
 						}
 					};
 					uploadResumable.send(reader.result);
-				 };
-				 reader.readAsArrayBuffer(file);
+					};
+					reader.readAsArrayBuffer(file);
 				}
 			};
 		});
