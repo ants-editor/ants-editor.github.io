@@ -233,45 +233,39 @@ Util.addOnLoad(()=>
 		})
 		.then(()=>
 		{
-			return google.listFiles('ant-backup.json');
+			return google.listFiles('ant-backup.json').then((response)=>
+			{
+				if( response.result.files.length )
+					return google.downloadFile( response.result.files[0].id ).then((file_content)=>
+					{
+						return Promise.resolve( JSON.parse( file_content ) );
+					});
+
+				return Promise.resolve({ 'notes': []});
+			});
 		})
-		.then((response)=>
+		.then((notes)=>
 		{
-			return google.downloadFile( response.result.files[0].id );
 			//return google.getFileMetadata( response.result.files[0].id );
+			return db.getBackupJson();
 		})
-		.then((file_content)=>
+		.then((content)=>
 		{
-			console.log( file_content );
+			google.uploadFile('Ants editor backup','ant-backup.json',content,'application/json')
+			.then((result)=>
+			{
+				console.log('Success',result);
+			})
+			.catch((e)=>
+			{
+				console.log("Upload error", e );
+			});
 		})
-		//.then((file_content)=>
-		//{
-		//	return google.downloadFile( file_content );
-		//	//return db.getBackupJson();
-		//})
-		//.then((fileMetaData)=>
-		//{
-		//	return google.downloadFile( fileMetaData );
-		//})
-		//.then((content)=>
-		//{
-		//	google.uploadFile('Ants editor backup','ant-backup.json',content,'application/json')
-		//	.then((result)=>
-		//	{
-		//		console.log('Success',result);
-		//	})
-		//	.catch((e)=>
-		//	{
-		//		console.log("Upload error", e );
-		//	});
-		//})
 		.catch((other)=>
 		{
 			console.log('Other error',other);
 		});
 	});
-
-
 });
 
 
