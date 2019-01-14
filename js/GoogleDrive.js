@@ -74,7 +74,7 @@ export default class GoogleDrive
 	{
 		return window.gapi.client.drive.files.get
 		({
-			fileId: fileId,
+			fileId: file_id,
 			alt: 'media'
 		});
 	}
