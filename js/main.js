@@ -237,17 +237,22 @@ Util.addOnLoad(()=>
 		})
 		.then((response)=>
 		{
-			return google.getFileMetadata( response.result.files[0].id );
+			return google.downloadFile( response.result.files[0].id );
+			//return google.getFileMetadata( response.result.files[0].id );
 		})
 		.then((file_content)=>
 		{
-			return google.downloadFile( response.files[0] );
-			//return db.getBackupJson();
+			console.log( file_content );
 		})
-		.then((fileMetaData)=>
-		{
-			return google.downloadFile( fileMetaData );
-		})
+		//.then((file_content)=>
+		//{
+		//	return google.downloadFile( file_content );
+		//	//return db.getBackupJson();
+		//})
+		//.then((fileMetaData)=>
+		//{
+		//	return google.downloadFile( fileMetaData );
+		//})
 		//.then((content)=>
 		//{
 		//	google.uploadFile('Ants editor backup','ant-backup.json',content,'application/json')

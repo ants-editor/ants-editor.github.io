@@ -161,28 +161,29 @@ export default class GoogleDrive
 		* @param {File} file Drive File instance.
 		* @param {Function} callback Function to call when the request is complete.
 		*/
-	downloadFile(file)
+	downloadFile2(file_id )
 	{
 		return new Promise((resolve,reject)=>
 		{
 			if (file.downloadUrl)
 			{
-					let accessToken = window.gapi.auth.getToken().access_token;
-					let xhr = new XMLHttpRequest();
-					xhr.open('GET', file.downloadUrl);
-					xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-					xhr.onload = function() {
+				let accessToken = window.gapi.auth.getToken().access_token;
+				let xhr = new XMLHttpRequest();
+				xhr.open('GET', 'https://www.googleapis.com/drive/v3/files/'+file_id+'?alt=media' );
+				xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+				xhr.onload = function() {
 					resolve( xhr.responseText );
-					};
-					xhr.onerror = function() {
+				};
+
+				xhr.onerror = function() {
 					reject('Unknown error');
-					};
-					xhr.send();
+				};
+				xhr.send();
 			}
 			else
 			{
 					reject('Not downloadUrl property on file');
-				}
+			}
 		});
 	}
 	/**
