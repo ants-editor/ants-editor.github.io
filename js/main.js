@@ -237,7 +237,7 @@ Util.addOnLoad(()=>
 		})
 		.then((response)=>
 		{
-			return google.getFileMetaData( response.result.files[0].id );
+			return google.getFileMetadata( response.result.files[0].id );
 		})
 		.then((file_content)=>
 		{
