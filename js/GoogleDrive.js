@@ -82,12 +82,13 @@ export default class GoogleDrive
 	/**
 		* Print files.
 		*/
-	listFiles( filename ) {
+	listFiles( filename )
+	{
 		return window.gapi.client.drive.files.list({
 			'pageSize': 10,
 			'orderBy':'modifiedTime desc',
 			'fields': "nextPageToken, files(id, name)",
-			'q':"'name' = "+filename
+			'q':"name = '"+filename+'"'
 		});/*.then(function(response) {
 			appendPre('Files:');
 			let files = response.result.files;
