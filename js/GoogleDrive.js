@@ -101,6 +101,9 @@ export default class GoogleDrive
 			appendPre('No files found.');
 			}
 		});*/
+		/*
+		 { "files": [ { "id": "12MK_-20vBSmt3meJF1p3EC66o8cSQc_Z", "name": "ant-backup.json" } ] }
+*/
 	}
 
 	createDirectory(name)
@@ -135,7 +138,7 @@ export default class GoogleDrive
 		*
 		* @param {String} fileId ID of the file to print metadata for.
 		*/
-	printFile(fileId)
+	getFileMetadata(fileId)
 	{
 		return new Promise((resolve,reject)=>
 		{
@@ -162,7 +165,8 @@ export default class GoogleDrive
 	{
 		return new Promise((resolve,reject)=>
 		{
-					if (file.downloadUrl) {
+			if (file.downloadUrl)
+			{
 					let accessToken = window.gapi.auth.getToken().access_token;
 					let xhr = new XMLHttpRequest();
 					xhr.open('GET', file.downloadUrl);
@@ -174,8 +178,8 @@ export default class GoogleDrive
 					reject('Unknown error');
 					};
 					xhr.send();
-					}
-				else
+			}
+			else
 			{
 					reject('Not downloadUrl property on file');
 				}

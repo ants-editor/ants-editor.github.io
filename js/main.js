@@ -235,15 +235,19 @@ Util.addOnLoad(()=>
 		{
 			return google.listFiles('ant-backup.json');
 		})
-		.then((file_list)=>
+		.then((response)=>
 		{
-			console.log( file_list );
+			return google.getFileMetaData( response.files[0].id );
 		})
-		//.then(()=>
-		//{
-		//	console.log('Gettting backup');
-		//	return db.getBackupJson();
-		//})
+		.then((file_content)=>
+		{
+			return google.downloadFile( response.files[0] );
+			//return db.getBackupJson();
+		})
+		.then((fileMetaData)=>
+		{
+			return google.downloadFile( fileMetaData );
+		})
 		//.then((content)=>
 		//{
 		//	google.uploadFile('Ants editor backup','ant-backup.json',content,'application/json')
