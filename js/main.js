@@ -255,6 +255,22 @@ Util.addOnLoad(()=>
 		})
 		.then((notes)=>
 		{
+			let gen = (note)=>
+			{
+				return db.getNote(note.id).then((n)=>
+				{
+					let date = new Date( note.updated );
+					if( date > n.updated )
+						return db.saveNote( note.id, note.text, true );
+
+					return Promise.resolve( 1 );
+				});
+			};
+
+			return PromiseUtils.runSequential(notes,gen);
+		})
+		.then(()=>
+		{
 			//return google.getFileMetadata( response.result.files[0].id );
 			return db.getBackupJson();
 		})
