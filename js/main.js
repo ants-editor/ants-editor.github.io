@@ -238,7 +238,7 @@ Util.addOnLoad(()=>
 		.then((file_list)=>
 		{
 			console.log( file_list );
-		});
+		})
 		//.then(()=>
 		//{
 		//	console.log('Gettting backup');
@@ -256,10 +256,10 @@ Util.addOnLoad(()=>
 		//		console.log("Upload error", e );
 		//	});
 		//})
-		//.catch((other)=>
-		//{
-		//	console.log('Other error',other);
-		//});
+		.catch((other)=>
+		{
+			console.log('Other error',other);
+		});
 	});
 
 
