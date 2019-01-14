@@ -88,7 +88,7 @@ export default class GoogleDrive
 			'pageSize': 10,
 			'orderBy':'modifiedTime desc',
 			'fields': "nextPageToken, files(id, name)",
-			'q':"name = '"+filename+'"'
+			'q':"name = '"+filename+"'"
 		});/*.then(function(response) {
 			appendPre('Files:');
 			let files = response.result.files;
