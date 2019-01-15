@@ -240,9 +240,7 @@ Util.addOnLoad(()=>
 					{
 						try{
 
-							console.log('Content is',file_content);
-							let obj = JSON.parse( file_content );
-							return Promise.resolve( obj );
+							return Promise.resolve( file_content.result.notes );
 						}
 						catch(parseException)
 						{
