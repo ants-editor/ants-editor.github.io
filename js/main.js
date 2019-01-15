@@ -287,7 +287,11 @@ Util.addOnLoad(()=>
 		})
 		.catch((other)=>
 		{
-			console.log('Other error',other);
+			if( typeof other == "string" )
+				alert( other );
+			else
+				if( other.msg )
+					alert( other.msg );
 		});
 	});
 });
