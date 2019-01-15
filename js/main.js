@@ -258,11 +258,18 @@ Util.addOnLoad(()=>
 			{
 				return db.getNote(note.id).then((n)=>
 				{
-					let date = new Date( note.updated );
-					if( date > n.updated )
-						return db.saveNote( note.id, note.text, true );
+					if( n )
+					{
+						let date = new Date( note.updated );
+						if( date > n.updated )
+							return db.saveNote( note.id, note.text, false );
 
-					return Promise.resolve( 1 );
+						return Promise.resolve( 1 );
+					}
+					else
+					{
+						return db.saveNote( note.id, note.text, true );
+					}
 				});
 			};
 
