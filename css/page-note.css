@@ -10,6 +10,7 @@
 	bottom: 16px;
 	left: 16px;
 	right: 16px;
+	width: 98%;
 }
 
 #note-preview.hidden, #note-edit.hidden
