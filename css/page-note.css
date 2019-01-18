@@ -3,10 +3,13 @@
 {
 	font-family: 'Roboto Mono', monospace;
 	color: black;
-	width: 100%;
-	height: 100%;
 	background-color: white;
 	border: none;
+	position: absolute;
+	top: 16px;
+	bottom: 16px;
+	left: 16px;
+	right: 16px;
 }
 
 #note-preview.hidden, #note-edit.hidden
@@ -26,4 +29,5 @@
 #note-edit
 {
 	padding: 16px 16px;
+	position: relative;
 }
