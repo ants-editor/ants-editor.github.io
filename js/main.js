@@ -254,26 +254,30 @@ Util.addOnLoad(()=>
 		})
 		.then((notes)=>
 		{
-			let gen = (note)=>
+			if( notes.length )
 			{
-				return db.getNote(note.id).then((n)=>
+				let gen = (note)=>
 				{
-					if( n )
+					return db.getNote(note.id).then((n)=>
 					{
-						let date = new Date( note.updated );
-						if( date > n.updated )
-							return db.saveNote( note.id, note.text, false );
+						if( n )
+						{
+							let date = new Date( note.updated );
+							if( date > n.updated )
+								return db.saveNote( note.id, note.text, false );
 
-						return Promise.resolve( 1 );
-					}
-					else
-					{
-						return db.saveNote( note.id, note.text, true );
-					}
-				});
-			};
+							return Promise.resolve( 1 );
+						}
+						else
+						{
+							return db.saveNote( note.id, note.text, true );
+						}
+					});
+				};
 
-			return PromiseUtils.runSequential(notes,gen);
+				return PromiseUtils.runSequential(notes,gen);
+			}
+			return Promise.resolve(true);
 		})
 		.then(()=>
 		{
