@@ -8,6 +8,11 @@ a.note-list-item
 	padding: 5px 16px;
 }
 
+.note-list-item span
+{
+	display: block;
+}
+
 #note-list
 {
 	padding-top: 16px;
