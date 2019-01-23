@@ -253,11 +253,11 @@ Util.addOnLoad(()=>
 						catch(parseException)
 						{
 							console.log( parseException );
-							return Promise.resolve({ 'notes': []});
+							return Promise.resolve([]);
 						}
 					});
 
-				return Promise.resolve({ 'notes': []});
+				return Promise.resolve([]);
 			});
 		})
 		.then((notes)=>
