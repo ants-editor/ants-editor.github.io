@@ -92,6 +92,8 @@ Util.addOnLoad(()=>
   				typographer:  true,		 // Enable smartypants and other sweet transforms
   			});	  // html / src / debug
 
+			//Replace Notes and attachments
+
 			var result = md.render( note.text );
 			Util.getById('preview-page-edit-button').setAttribute( 'data-note-edit',note.id );
 			Util.getById('note-preview').innerHTML = result;
@@ -206,6 +208,12 @@ Util.addOnLoad(()=>
 
 	let google = new GoogleDrive(CLIENT_ID, API_KEY, SCOPES );
 
+	Util.getById('page-settings').addEventListener('page-show',(evt)=>
+	{
+
+	});
+
+
 	Util.getById('sync-google').addEventListener('click',(evt)=>
 	{
 		Util.stopEvent( evt );
@@ -254,30 +262,29 @@ Util.addOnLoad(()=>
 		})
 		.then((notes)=>
 		{
-			if( notes.length )
+			if( notes.length === 0 )
+				return Promise.resolve( true );
+
+			let gen = (note)=>
 			{
-				let gen = (note)=>
+				return db.getNote(note.id).then((n)=>
 				{
-					return db.getNote(note.id).then((n)=>
+					if( n )
 					{
-						if( n )
-						{
-							let date = new Date( note.updated );
-							if( date > n.updated )
-								return db.saveNote( note.id, note.text, false );
+						let date = new Date( note.updated );
+						if( date > n.updated )
+							return db.saveNote( note.id, note.text, false );
 
-							return Promise.resolve( 1 );
-						}
-						else
-						{
-							return db.saveNote( note.id, note.text, true );
-						}
-					});
-				};
+						return Promise.resolve( 1 );
+					}
+					else
+					{
+						return db.saveNote( note.id, note.text, true );
+					}
+				});
+			};
 
-				return PromiseUtils.runSequential(notes,gen);
-			}
-			return Promise.resolve(true);
+			return PromiseUtils.runSequential(notes,gen);
 		})
 		.then(()=>
 		{
@@ -290,7 +297,7 @@ Util.addOnLoad(()=>
 			.then((result)=>
 			{
 				console.log('Success',result);
-			})
+		})
 			.catch((e)=>
 			{
 				console.log("Upload error", e );

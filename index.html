@@ -9,7 +9,8 @@
 		<script type="module" src="js/main.js"></script>
 		<!-- link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet" -->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-		<link rel="stylesheet" type="text/css" href="depencies/dialog-polyfill/dialog-polyfill.css" -->
+		<link rel="stylesheet" type="text/css" href="depencies/dialog-polyfill/dialog-polyfill.css">
+		<link rel="stylesheet" type="text/css" href="css/github-markdown.css">
 		<link rel="stylesheet" href="css/material.min.css">
 		<link media="all" rel="stylesheet" href="css/layout.css">
 		<link media="all" rel="stylesheet" href="css/page-note.css">
@@ -75,7 +76,7 @@
 					</header>
 				</div>
 				<div>
-					<div id="note-preview"></div>
+					<div id="note-preview" class="markdown-body"></div>
 				</div>
 			</div>
 		</sauna-page>
@@ -158,10 +159,13 @@
 					</label>
 				</div>
 				<div>
+
 					<a href="#" id="sync-google">Sync With Google</a>
+
 					<div>
 						<a href="#" id="page-settings-export-button">Generate backup</a>
 					</div>
+
 					<div>
 						<a href="" class="page-settings-donwload-button hidden" id="page-settings-download-button">Download Backup</a>
 					</div>

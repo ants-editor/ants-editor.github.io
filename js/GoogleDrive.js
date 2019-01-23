@@ -54,6 +54,14 @@ export default class GoogleDrive
 		});
 	}
 
+	isSignedId()
+	{
+		if( typeof window.gapi === "undefined" || window.gapi.auth2 )
+			return false;
+
+		return window.gapi.auth2.getAuthInstance().isSignedIn.get();
+	}
+
 	/**
 		*	Sign in the user upon button click.
 		*/
@@ -167,23 +175,23 @@ export default class GoogleDrive
 		{
 			if (file.downloadUrl)
 			{
-				let accessToken = window.gapi.auth.getToken().access_token;
-				let xhr = new XMLHttpRequest();
+					let accessToken = window.gapi.auth.getToken().access_token;
+					let xhr = new XMLHttpRequest();
 				xhr.open('GET', 'https://www.googleapis.com/drive/v3/files/'+file_id+'?alt=media' );
-				xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-				xhr.onload = function() {
+					xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+					xhr.onload = function() {
 					resolve( xhr.responseText );
-				};
+					};
 
-				xhr.onerror = function() {
+					xhr.onerror = function() {
 					reject('Unknown error');
-				};
-				xhr.send();
+					};
+					xhr.send();
 			}
 			else
 			{
 					reject('Not downloadUrl property on file');
-			}
+				}
 		});
 	}
 	/**
