@@ -86,7 +86,7 @@ export default class NoteDb
 					note.access_count = 1;
 				}
 
-				this.database.put('note', obj ).catch((e)=>{ console.log( e ); });
+				this.database.put('note', note ).catch((e)=>{ console.log( e ); });
 
 				return Promise.resolve( note );
 			});
