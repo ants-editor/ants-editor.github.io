@@ -9,7 +9,7 @@ export default class NoteDb
 		this.database	= new Finger
 		({
 			name		: 'notes',
-			version	: 7,
+			version	: 8,
 			stores		:{
 				note:
 				{
@@ -20,7 +20,8 @@ export default class NoteDb
 						{ indexName: 'title', keyPath: 'title', objectParameters: { uniq: true, multiEntry: false }},
 						{ indexName: 'search', keyPath: 'search', objectParameters: { uniq: false, multiEntry: false }},
 						{ indexName: 'tags' ,keyPath:'tags'	,objectParameters: { uniq: false ,multiEntry: true} },
-						{ indexName: 'updated', keyPath:'updated', objectParameters:{ uniq: false, multiEntry: false}}
+						{ indexName: 'updated', keyPath:'updated', objectParameters:{ uniq: false, multiEntry: false}},
+						{ indexName: 'access_count', keyPath:'access_count', objectParameters:{ uniq: false, multiEntry: false}}
 					]
 				},
 				attachement:
@@ -69,9 +70,26 @@ export default class NoteDb
 
 	}
 
-	getNote(note_id)
+	getNote( note_id, to_process )
 	{
-		return this.database.get('note',parseInt( note_id ));
+		if( to_process )
+			return this.database.get('note',parseInt( note_id ));
+		else
+			return this.database.get('note',parseInt( note_id ) ).then((note)=>
+			{
+				if( 'access_count' in note )
+				{
+					note.access_count++;
+				}
+				else
+				{
+					note.access_count = 1;
+				}
+
+				this.database.put('note', obj ).catch((e)=>{ console.log( e ); });
+
+				return Promise.resolve( note );
+			});
 	}
 
 	addNewNote(text, tags)
@@ -184,7 +202,7 @@ export default class NoteDb
 		{
 			let ctype = contentType ? contentType : 'application/json';
 
-        	var blob = new Blob([typeof object === 'string' ? notes : JSON.stringify( object, null, 2)], {type :  ctype });
+        	var blob = new Blob([JSON.stringify( object, null, 2)], {type :  ctype });
         	let objectURL = URL.createObjectURL( blob );
         	return resolve( objectURL );
 		});
