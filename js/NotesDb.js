@@ -202,7 +202,7 @@ export default class NoteDb
 		{
 			let ctype = contentType ? contentType : 'application/json';
 
-        	var blob = new Blob([JSON.stringify( object, null, 2)], {type :  ctype });
+        	var blob = new Blob([typeof obj === "string" ? object : JSON.stringify( object, null, 2)], {type :  ctype });
         	let objectURL = URL.createObjectURL( blob );
         	return resolve( objectURL );
 		});
