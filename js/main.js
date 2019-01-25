@@ -143,6 +143,7 @@ Util.addOnLoad(()=>
 		})
 		.catch((error)=>
 		{
+			console.log('Error',error);
 			alert('An error occourred please try again');
 		});
 	});
