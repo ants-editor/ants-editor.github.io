@@ -29,6 +29,11 @@ a.note-list-item
 	font-size: 12px;
 }
 
+#all-notes .input-container
+{
+	max-width: 100px;
+}
+
 #all-notes .header
 {
 	border-bottom: 1px solid #eeeeee;
