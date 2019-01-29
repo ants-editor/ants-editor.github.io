@@ -103,7 +103,7 @@ export default class NoteDb
 		//let title = text.trim().split('\n')[0];
 		let title = text.trim().replace(/#/g,' ').split('\n')[0].trim();
 
-		return this.database.addItem('note',null,{id: Date.now(), text: text, tags: tags, title: title, search: title.toLowerCase(), updated: new Date()});
+		return this.database.addItem('note',null,{id: Date.now(), text: text, tags: tags, title: title, search: title.toLowerCase(), access_count: 1, updated: new Date()});
 	}
 
 	search(name)

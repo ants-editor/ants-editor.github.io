@@ -7,6 +7,7 @@
 		<script src="js/dialog-polyfill.js"></script>
 		<script type="module" src="js/main.js"></script>
 
+		<link rel="manifest" href="ants.webmanifest">
 		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 		<link rel="stylesheet" type="text/css" href="css/dialog-polyfill.css">
 		<link rel="stylesheet" type="text/css" href="css/github-markdown.css">
@@ -106,33 +107,26 @@
 		</sauna-page>
 		<sauna-page id="page-settings">
 			<div>
-				<header >
-					<div class="right-center">
+				<header>
+					<div>
 						<a href="#" class="button-icon" data-navigation="back">
 							<i class="material-icons">arrow_back_ios</i>
 						</a>
-						<div>
-							<span class="title">Settings</span>
-						</div>
+						<span id="preview-title" class="title">Settings</span>
 					</div>
+					<div></div>
 				</header>
 				<div class="page-content main">
 					<div>
-						<label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-1">
-							<input type="checkbox" id="switch-1" class="mdl-switch__input" checked>
-							<span class="mdl-switch__label"></span>
-						</label>
-					</div>
-					<div>
 						<a href="#" id="sync-google">Sync With Google</a>
-
+						<hr>
 						<div>
 							<a href="#" id="page-settings-export-button">Generate backup</a>
 						</div>
-
-						<div>
+						<div class="hidden">
 							<a href="#" class="page-settings-donwload-button hidden" id="page-settings-download-button">Download Backup</a>
 						</div>
+						<hr>
 						<div>
 							<input type="file" id="page-settings-import-file"><a href="#"  id="page-settings-import-button"> Import </a>
 						</div>
