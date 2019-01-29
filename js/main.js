@@ -242,25 +242,45 @@ Util.addOnLoad(()=>
 		})
 		.then(()=>
 		{
+			return db.getBackupPreferences('google-drive');
+		})
+		.then((file_info )=>
+		{
+			if( file_info )
+			{
+				return Promise.resolve( file_info );
+			}
+
 			return google.listFiles('ant-backup.json').then((response)=>
 			{
 				if( response.result.files.length )
-					return google.downloadFile( response.result.files[0].id ).then((file_content)=>
+				{
+					return db.setBackupPreferences('google-drive',response.result.files[0] ).then(()=>
 					{
-						try{
-
-							return Promise.resolve( file_content.result.notes );
-						}
-						catch(parseException)
-						{
-							console.log( parseException );
-							return Promise.resolve([]);
-						}
+						return Promise.resolve( response.result.files[0] );
 					});
+				}
 
-				return Promise.resolve([]);
+				return Promise.resolve( null );
 			});
 		})
+		.then((file_info)=>
+		{
+			if( file_info === null )
+				return Promise.resolve( [] );
+
+			return google.downloadFile( response.result.files[0].id ).then((file_content)=>
+			{
+				try{
+					return Promise.resolve( file_content.result.notes );
+				}
+				catch(parseException)
+				{
+					console.log( parseException );
+					return Promise.resolve([]);
+				}
+			});
+		}
 		.then((notes)=>
 		{
 			if( notes.length === 0 )
@@ -294,23 +314,33 @@ Util.addOnLoad(()=>
 		})
 		.then((content)=>
 		{
-			google.uploadFile('Ants editor backup','ant-backup.json',content,'application/json')
-			.then((result)=>
+			return db.getBackupPreferences('google-drive')
+			.then((backupPreferences)=>
 			{
-				console.log('Success',result);
-		})
-			.catch((e)=>
-			{
-				console.log("Upload error", e );
+				if( backupPreferences )
+				{
+					return google.updateFile( backupPreferences.object.id, 'Ants editor backup','ant-backup.json',content,'application/json')
+					.then((result)=>
+					{
+						console.log('Success',result);
+					});
+				}
+				else
+				{
+					return google.uploadFile('Ants editor backup','ant-backup.json',content,'application/json')
+					.then((result)=>
+					{
+						console.log('Success',result);
+					});
+				}
 			});
 		})
 		.catch((other)=>
 		{
 			if( typeof other == "string" )
 				alert( other );
-			else
-				if( other.msg )
-					alert( other.msg );
+			else if( other.msg )
+				alert( other.msg );
 		});
 	});
 });

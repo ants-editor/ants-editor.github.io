@@ -255,6 +255,49 @@ export default class GoogleDrive
 		});
 	}
 
+	updateFile(fileId, title, filename, content, contentType )
+	{
+		const boundary = '-------314159265358979323846';
+		const delimiter = "\r\n--" + boundary + "\r\n";
+		const close_delim = "\r\n--" + boundary + "--";
+
+		let ctype = contentType || 'application/octet-stream';
+
+		let metadata = {
+			'title': title,
+			'name': filename,
+			'mimeType': ctype
+		};
+
+		console.log('Before btoa',content);
+		let base64Data = this.base64Encode( content );
+		console.log('after Before btoa');
+		console.log( content );
+		let multipartRequestBody =
+					delimiter +
+					'Content-Type: application/json\r\n\r\n' +
+					JSON.stringify(metadata) +
+					delimiter +
+					'Content-Type: ' + ctype + '\r\n' +
+					'Content-Transfer-Encoding: base64\r\n' +
+					'\r\n' +
+					base64Data +
+					close_delim;
+
+		return window.gapi.client.request
+		({
+			'path': '/upload/drive/v3/files/'+fileId,
+			'method': 'PATCH',
+			'params': {'uploadType': 'multipart'},
+			'headers': {
+				'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
+			},
+			'body': multipartRequestBody
+		});
+	}
+
+
+
 
 	uploadJsonFile(name,data)
 	{

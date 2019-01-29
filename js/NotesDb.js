@@ -24,6 +24,12 @@ export default class NoteDb
 						{ indexName: 'access_count', keyPath:'access_count', objectParameters:{ uniq: false, multiEntry: false}}
 					]
 				},
+				backup:
+				{
+					keyPath : 'id',
+					autoincrement: false,
+					indexes :[ ]
+				},
 				attachement:
 				{
 					keyPath	: 'id',
@@ -209,5 +215,14 @@ export default class NoteDb
         	let objectURL = URL.createObjectURL( blob );
         	return resolve( objectURL );
 		});
+	}
+
+	setBackupPreferences(obj, id )
+	{
+		return this.database.put('backup',{ id: id, object: obj });
+	}
+	getBackupPreferences( id )
+	{
+		return this.database.getByKey('backup', id );
 	}
 }
