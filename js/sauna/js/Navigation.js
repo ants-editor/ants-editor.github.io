@@ -34,14 +34,15 @@ export default class Navigation
 	{
 		console.log('PageInitId '+pageInit );
 
-		Util.delegateEvent('click',document.body,'a',(evt)=>
-		{
+		let old_self = this;
 
-			let href = evt.target.getAttribute('href');
+		Util.delegateEvent('click',document.body,'a',function(evt)
+		{
+			let href = this.getAttribute('href');
 
 			if( ! href || href === '#') return;
 
-			let hash = this.getPageIdByHash( href );
+			let hash = old_self.getPageIdByHash( href );
 
 			var obj	= Util.getById( hash );
 
@@ -56,7 +57,7 @@ export default class Navigation
 
 			if( obj instanceof Page  || obj instanceof Panel )
 			{
-				this.click_anchorHash( href, false );
+				old_self.click_anchorHash( href, false );
 				Util.stopEvent( evt );
 				return;
 			}
