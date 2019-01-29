@@ -62,7 +62,7 @@ export default class NoteDb
 	getNotes(start, limit)
 	{
 		//return this.database.getAll('note',{ start: start, count: 20 });
-		return this.database.customFilter('note', { index: 'updated',direction: "prev", count: 20 }, i=> true);
+		return this.database.customFilter('note', { index: 'access_count',direction: "prev", count: 100 }, i=> true);
 	}
 
 	getAttachments(note_id)
@@ -77,6 +77,8 @@ export default class NoteDb
 		else
 			return this.database.get('note',parseInt( note_id ) ).then((note)=>
 			{
+				if( note )
+			{
 				if( 'access_count' in note )
 				{
 					note.access_count++;
@@ -87,6 +89,7 @@ export default class NoteDb
 				}
 
 				this.database.put('note', note ).catch((e)=>{ console.log( e ); });
+				}
 
 				return Promise.resolve( note );
 			});

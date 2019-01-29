@@ -1,0 +1,139 @@
+:root {
+  --panel-width: 320px;
+  --transition-speed: all 0.3s ease;
+  --panel-negative-width: -320px;
+}
+
+
+body
+{
+  overflow				: hidden;
+  padding				: 0;
+  margin				: 0;
+  position				: absolute;
+  top					: 0;
+  left					: 0;
+  right					: 0;
+  bottom				: 0;
+
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+sauna-panel
+{
+  position				: absolute;
+  transition			: var( --transition-speed );
+  width					: 100%;
+  max-width				: var(--panel-width);
+  top					: 0;
+  bottom				: 0;
+  background-color		: white;
+  z-index				: 5;
+  pointer-events		: all;
+}
+
+sauna-panel.right
+{
+  transform				: translate3d(100%,0,0);
+  right					: 0;
+}
+
+sauna-panel.left
+{
+  transform				: translate3d(-100%,0,0);
+  left					: 0;
+}
+
+.panel-open-right sauna-panel.right.open
+,.panel-open-left sauna-panel.left.open
+{
+  z-index					: 5;
+  transform				: translate3d(0,0,0);
+}
+
+sauna-page
+{
+  position				: fixed;
+  top						: 0;
+  left					: 0;
+  right					: 0;
+  bottom					: 0;
+  /*width					: 100%;*/
+  overflow				: hidden;
+  transition				: var( --transition-speed );
+  z-index					: 1;
+  transform				: translate3d(100%,0,0);
+  box-sizing			: border-box;
+}
+
+sauna-page.active
+{
+  z-index					: 3;
+  display					: block;
+  transform				: translate3d(0,0,0);
+}
+sauna-page.noanimation
+{
+  z-index					: 2;
+  transition				: all 0s linear;
+  transition-property: none;
+}
+
+sauna-page.previous.noanimation
+{
+  z-index					: 1;
+  transition				: all 0s linear;
+  transform				: translate3d(100%,0,0);
+  transition-property: none;
+}
+
+sauna-page.previous
+,sauna-page.start.previous
+{
+  transform				: translate3d(-100%,0,0);
+  display				: block;
+}
+
+sauna-page.previous.active
+{
+  transform				: translate3d(0,0,0);
+  display				: block;
+}
+
+@media( max-width: 799px )
+{
+  .panel-open-right sauna-page.active
+  {
+  	transform		: translate3d(var(--panel-negative-width),0,0);
+    width					: 100%;
+  }
+  .panel-open-left sauna-page.active
+  {
+    /*left					:  var(--panel-width );*/
+    width					: 100%;
+	transform : translate3d(var(--panel-width),0,0);
+  }
+}
+
+@media( min-width: 800px )
+{
+	.panel-always-open-left sauna-page
+  	,.panel-always-open-left.panel-open-right sauna-page.active
+	{
+		width: 100%;
+		left: var(--panel-width);
+	}
+	.panel-always-open-rigth sauna-page
+  	,.panel-always-open-right.panel-open-right sauna-page.active
+	{
+		width: 100%;
+		right: var(--panel-width);
+	}
+	.panel-always-open-left sauna-panel.static
+	,.panel-always-open-right sauna-panel.static
+	{
+    	z-index: 5;
+    	transform: translate3d(0,0,0);
+	}
+}
+

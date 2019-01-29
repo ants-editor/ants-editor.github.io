@@ -14,7 +14,6 @@ export default class Note
 		this.attachments = [];
 		this.tags = [];
 		this.edit = Util.getById('note-edit');
-		this.preview = Util.getById('note-preview');
 
 		Util.getById('note-delete').addEventListener('click',(evt)=>
 		{
@@ -29,13 +28,6 @@ export default class Note
 			Util.stopEvent( evt );
 			this.showNewNote();
 		});
-
-		Util.getById('note-preview-btn').addEventListener('click',(evt)=>
-		{
-			Util.stopEvent( evt );
-			this.togglePreview();
-		});
-
 
 		Util.getById('delete-note-accept').addEventListener('click',(evt)=>
 		{

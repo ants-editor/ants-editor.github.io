@@ -2,193 +2,19 @@ const template = document.createElement('template');
 
 template.innerHTML = `
   <style>
-	:host(.pop_left2right)
-	{
-		animation-fill-mode: both;
-		animation-name: pop_left2right;
-		animation-timing-function: ease-in;
-  		transform-origin: bottom center;
-		animation-duration: 0.3s;
-	}
-	:host(.pop_right2left)
-	{
-		animation-fill-mode: both;
-		animation-name: pop_right2left;
-		animation-timing-function: ease-in;
-  		transform-origin: bottom center;
-		animation-duration: 0.3s;
-	}
-
-	:host(.push_right2left)
-	{
-		animation-fill-mode: both;
-		animation-name: push_right2left;
-		animation-timing-function: ease-in;
-  		transform-origin: bottom center;
-		animation-duration: 0.3s;
-	}
-
-	:host(.push_left2right)
-	{
-		animation-fill-mode: both;
-		animation-name: push_left2right;
-		animation-timing-function: ease-in;
-  		transform-origin: bottom center;
-		animation-duration: 0.3s;
-	}
-
-	@keyframes pop_left2right{
-		0% {
-    		transform: translate( 0px, 0);
-  		}
-  		100% {
-  		  	transform: translate( 100%, 0);
-  		}
-	}
-
-	@keyframes pop_right2left{
-		0% {
-    		transform: translate( 0px, 0);
-  		}
-  		100% {
-  		  	transform: translate( -100%, 0);
-  		}
-	}
-	@keyframes push_right2left{
-		0% {
-  		  	transform: translate( 100%, 0);
-  		}
-  		100% {
-    		transform: translate( 0px, 0);
-  		}
-	}
-	@keyframes push_left2right{
-		0% {
-  		  	transform: translate( -100%, 0);
-  		}
-  		100% {
-    		transform: translate( 0px, 0);
-  		}
-	}
-
-    :host {
-  		position				: fixed;
-  		top						: 0;
-  		left					: 0;
-  		right					: 0;
-  		bottom					: 0;
-  		/*width					: 100%;*/
-  		overflow				: hidden;
-  		z-index					: 1;
-  		box-sizing			: border-box;
-	    -webkit-transform		: translate3d(-100%,0,0);
-	    transform				: translate3d(-100%,0,0);
-    }
-
-	:host([animation="enabled"])
-	{
-		/*
-  		transition				: all 0.3s ease;
-		*/
-	}
-
-	,:host(.previous)
-	{
-	  -webkit-transform		: translate3d(-100%,0,0);
-	  transform				: translate3d(-100%,0,0);
-	}
-
-	:host(.active)
-	{
-	  z-index					: 3;
-	  display					: block;
-	  -webkit-transform		: translate3d(0,0,0);
-	  transform				: translate3d(0,0,0);
-	}
-
-	.wrapper
-	{
-		display: -ms-flexbox;
-    	display: -webkit-flex;
-    	display: flex;
-    	-webkit-flex-direction: column;
-    	-ms-flex-direction: column;
-    	flex-direction: column;
-    	-webkit-flex-wrap: nowrap;
-    	-ms-flex-wrap: nowrap;
-    	flex-wrap: nowrap;
-    	-webkit-justify-content: flex-start;
-    	-ms-flex-pack: start;
-    	justify-content: flex-start;
-    	-webkit-align-content: stretch;
-    	-ms-flex-line-pack: stretch;
-    	align-content: stretch;
-    	-webkit-align-items: flex-start;
-    	-ms-flex-align: start;
-    	align-items: flex-start;
-
-		width: 100%;
-		height: 100%;
-		overflow: auto;
-	}
-
-	.wrapper>.main
-	{
-
-		-webkit-order: 0;
-    	-ms-flex-order: 0;
-    	order: 0;
-    	-webkit-flex: 1 0 auto;
-    	-ms-flex: 1 0 auto;
-    	flex: 1 0 auto;
-
-   		-webkit-align-self: stretch;
-    	-ms-flex-item-align: stretch;
-    	align-self: stretch;
-
-
-		overflow-y				: auto;
-		overflow-x				: hidden;
-	}
-
-/*
-	:host.previous.noanimation
-	{
-
-	  z-index					: 1;
-	  transition				: all 0s linear;
-	  transform				: translate3d(100%,0,0);
-	  -moz-transition-property: none;
-	  -webkit-transition-property: none;
-	  -o-transition-property: none;
-	  transition-property: none;
-
-	}
 	:host
-	,:host.start.previous
 	{
-	  transform				: translate3d(-100%,0,0);
-	  -webkit-transform		: translate3d(-100%,0,0);
-	  display					: block;
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 0;
+		bottom: 0;
+		overflow: hidden;
 	}
-
-	:host header
-	{
-	  height					: 45px;
-	  position				: absolute;
-	  top						: 0;
-	  right					: 0;
-	  left					: 0;
-	}
-*/
-
-  </style>
-  <div class="wrapper">
-	<div class="main">
+	</style>
+	<div>
 		<slot></slot>
-	</div>
-  </div>
-`;
+	</div>`;
 
 class Page extends HTMLElement
 {
@@ -197,11 +23,11 @@ class Page extends HTMLElement
 	constructor()
 	{
 		super();
-
 		this.debug = true;
 
 		let shadowRoot = this.attachShadow({mode: 'open'});
     	shadowRoot.appendChild(template.content.cloneNode(true));
+		/*
 		this.addEventListener('animationend',(evt)=>{
 			console.log('Animation end',evt.animationName);
 			if( evt.animationName === 'push_right2left' || evt.animationName === 'push_left2right' )
@@ -215,6 +41,7 @@ class Page extends HTMLElement
 				this.classList.remove('pop_right2left','pop_left2right');
 			}
 		});
+		*/
 	}
 
 	connectedCallback()
