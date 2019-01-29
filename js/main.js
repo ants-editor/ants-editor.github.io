@@ -280,7 +280,7 @@ Util.addOnLoad(()=>
 					return Promise.resolve([]);
 				}
 			});
-		}
+		})
 		.then((notes)=>
 		{
 			if( notes.length === 0 )
