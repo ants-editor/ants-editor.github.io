@@ -5,12 +5,12 @@
 	color: black;
 	background-color: white;
 	border: none;
-	position: absolute;
-	top: 16px;
-	bottom: 16px;
-	left: 16px;
-	right: 16px;
-	width: 98%;
+	height: 100%;
+	width: 100%;
+   	resize: none;
+   	overflow: auto;
+	box-sizing: border-box;
+	padding: 16px 0 16px 16px;
 }
 
 #note-preview.hidden, #note-edit.hidden
@@ -29,6 +29,12 @@
 
 #note-edit
 {
-	padding: 16px 16px;
+	position: relative;
+	overflow: hidden;
+}
+
+#note-edit
+{
 	position: relative;
 }
+

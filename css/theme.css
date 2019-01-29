@@ -1,0 +1,139 @@
+:root
+{
+	--button-icon-over-bg: rgba(158,158,158,.4);
+}
+body
+{
+	font-family: 'Google Sans',Roboto,Arial,sans-serif;
+    letter-spacing: 0;
+    font-size: 22px;
+    line-height: 28px;
+    color: #3c4043;
+    opacity: 1;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+header.container-horizontal-last-full
+{
+	height: var(--header-height);
+}
+
+
+
+
+header
+{
+	padding-left: 16px;
+	padding-right: 16px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-content: stretch;
+    align-items: flex-start;
+	box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
+	background-color: #263238;
+}
+
+header > div:not(:last-child)
+{
+    order: 0;
+    flex: 0 1 auto;
+    align-self: center;
+}
+header > div:last-child
+{
+    order: 0;
+    flex: 1 1 auto;
+    align-self: stretch;
+}
+
+header .title
+{
+	font-size: 30px;
+	vertical-align: super;
+}
+
+.button-icon
+{
+	display: inline-block;
+	border-radius: 50%;
+	font-size: 24px;
+	height: 32px;
+	margin-left: 0;
+	margin-right: 0;
+	min-width: 32px;
+	width: 32px;
+	padding: 0;
+	overflow: hidden;
+	color: inherit;
+	line-height: normal;
+	text-align: center;
+}
+
+.button-icon>i
+{
+	line-height: 32px;
+}
+
+.button-icon:hover
+{
+    background-color: var(--button-icon-over-bg );
+}
+
+input
+{
+	border: none;
+    border-bottom-color: currentcolor;
+    border-bottom-style: none;
+    border-bottom-width: medium;
+	border-bottom: 1px solid rgba(0,0,0,.12);
+	display: block;
+	font-size: 16px;
+	font-family: "Helvetica","Arial",sans-serif;
+	margin: 0;
+	padding: 4px 0;
+	width: 100%;
+	background: 0 0;
+	text-align: left;
+	color: inherit;
+}
+
+.page_header_footer
+{
+	display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-content: stretch;
+    align-items: stretch;
+}
+
+.page_header_footer:first-child
+,.page_header_footer header
+{
+    order: 0;
+    flex: 0 1 auto;
+    align-self: auto;
+}
+
+.page_header_footer>div
+{
+    order: 0;
+    flex: 1 1 auto;
+    align-self: auto;
+}
+
+.page_header_footer>div:last-child
+{
+    order: 0;
+    flex: 0 1 auto;
+    align-self: auto;
+}
+
+.page_header_footer .page_content
+{
+
+}
