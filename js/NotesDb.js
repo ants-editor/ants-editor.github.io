@@ -223,6 +223,6 @@ export default class NoteDb
 	}
 	getBackupPreferences( id )
 	{
-		return this.database.getByKey('backup', id );
+		return this.database.get('backup', id );
 	}
 }
