@@ -99,6 +99,7 @@ export default class Note
 			this.id_input.value = note.id;
 			this.textarea.value = note.text;
 			this.nav.click_anchorHash('#note');
+			Util.getById('note-preview-btn').setAttribute('data-note-view',note.id );
 		});
 	}
 
