@@ -248,7 +248,7 @@ Util.addOnLoad(()=>
 		{
 			if( file_info )
 			{
-				return Promise.resolve( file_info );
+				return Promise.resolve( file_info.object );
 			}
 
 			return google.listFiles('ant-backup.json').then((response)=>
