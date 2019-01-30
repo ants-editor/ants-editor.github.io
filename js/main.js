@@ -315,11 +315,11 @@ Util.addOnLoad(()=>
 		.then((content)=>
 		{
 			return db.getBackupPreferences('google-drive')
-			.then((backupPreferences)=>
+			.then(( file_info )=>
 			{
-				if( backupPreferences )
+				if( file_info )
 				{
-					return google.updateFile( backupPreferences.object.id, 'Ants editor backup','ant-backup.json',content,'application/json')
+					return google.updateFile( file_info.id, 'Ants editor backup','ant-backup.json',content,'application/json')
 					.then((result)=>
 					{
 						console.log('Success',result);
