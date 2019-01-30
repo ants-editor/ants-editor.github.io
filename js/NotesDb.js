@@ -217,7 +217,7 @@ export default class NoteDb
 		});
 	}
 
-	setBackupPreferences(obj, id )
+	setBackupPreferences( id, obj )
 	{
 		return this.database.put('backup',{ id: id, object: obj });
 	}
