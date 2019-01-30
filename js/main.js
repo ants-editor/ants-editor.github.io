@@ -269,7 +269,7 @@ Util.addOnLoad(()=>
 			if( file_info === null )
 				return Promise.resolve( [] );
 
-			return google.downloadFile( response.result.files[0].id ).then((file_content)=>
+			return google.downloadFile( file_info.id ).then((file_content)=>
 			{
 				try{
 					return Promise.resolve( file_content.result.notes );
