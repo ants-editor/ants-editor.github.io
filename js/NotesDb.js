@@ -9,7 +9,7 @@ export default class NoteDb
 		this.database	= new Finger
 		({
 			name		: 'notes',
-			version	: 8,
+			version	: 9,
 			stores		:{
 				note:
 				{
