@@ -3,7 +3,7 @@
   "name": "Another Note Take Shittier Editor",
   "short_name": "Editor",
   "start_url": "index.html",
-  "display":"minimal-ui",
+  "display":"fullscreen",
   "background_color": "#fff",
   "description": "Another note app",
   "icons": [{
