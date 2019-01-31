@@ -223,6 +223,6 @@ export default class NoteDb
 	}
 	getBackupPreferences( id )
 	{
-		return this.database.get('backup', id ).then( preferences => preferences.object );
+		return this.database.get('backup', id ).then( preferences => preferences ? preferences.object: undefined );
 	}
 }

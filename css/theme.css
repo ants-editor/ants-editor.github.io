@@ -88,7 +88,7 @@ header .title
     background-color: var(--button-icon-over-bg );
 }
 
-input
+input[type="text"]
 {
 	border: none;
     border-bottom-color: currentcolor;
@@ -141,4 +141,31 @@ input
 .page_header_footer .page_content
 {
 
+}
+
+.button
+{
+    font-family: inherit;
+    font-size: 100%;
+    padding: .5em 1em;
+    color: #444;
+    color: rgba(0,0,0,.8);
+    border: 1px solid #999;
+    border: transparent;
+    text-decoration: none;
+    border-radius: 2px;
+	background-color: #45a6ff;
+	color: white;
+}
+
+.button:hover
+{
+    filter: alpha(opacity=90);
+    background-image: -webkit-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
+    background-image: linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));
+}
+
+.container
+{
+	padding: 0 16px 16px;
 }
