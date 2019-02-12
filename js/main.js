@@ -290,7 +290,7 @@ Util.addOnLoad(()=>
 		});
 	});
 
-	Utils.getById('sync-upload').addEventListener('click',(evt)=>
+	Util.getById('sync-upload').addEventListener('click',(evt)=>
 	{
 		Util.stopEvent( evt );
 
