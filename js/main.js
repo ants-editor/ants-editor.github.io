@@ -288,12 +288,11 @@ Util.addOnLoad(()=>
 			else if( other.msg )
 				alert( other.msg );
 		});
-
 	});
 
 	Utils.getById('sync-upload').addEventListener('click',(evt)=>
 	{
-		Utils.stopEvent( evt );
+		Util.stopEvent( evt );
 
 		db.getBackupJson()
 		.then((content)=>
