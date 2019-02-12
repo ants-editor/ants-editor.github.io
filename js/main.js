@@ -215,6 +215,120 @@ Util.addOnLoad(()=>
 	});
 
 
+	Utils.getById('sync-donwload').addEventListener('click',(evt)=>
+	{
+		return db.getBackupPreferences('google-drive');
+		.then((file_info )=>
+		{
+			if( file_info )
+			{
+				return Promise.resolve( file_info );
+			}
+
+			return google.listFiles('ant-backup.json').then((response)=>
+			{
+				if( response.result.files.length )
+					{
+					return db.setBackupPreferences('google-drive',response.result.files[0] ).then(()=>
+					{
+						return Promise.resolve( response.result.files[0] );
+					});
+				}
+
+				return Promise.resolve( null );
+			});
+		})
+		.then((file_info)=>
+		{
+			if( file_info === null )
+				return Promise.resolve( [] );
+
+			return google.downloadFile( file_info.id ).then((file_content)=>
+			{
+				try{
+							return Promise.resolve( file_content.result.notes );
+						}
+						catch(parseException)
+						{
+							console.log( parseException );
+							return Promise.resolve([]);
+						}
+					});
+		})
+		.then((notes)=>
+		{
+			if( notes.length === 0 )
+				return Promise.resolve( true );
+
+			let gen = (note)=>
+			{
+				return db.getNote(note.id).then((n)=>
+				{
+					if( n )
+					{
+						let date = new Date( note.updated );
+						if( date > n.updated )
+							return db.saveNote( note.id, note.text, false );
+
+						return Promise.resolve( 1 );
+					}
+					else
+					{
+						return db.saveNote( note.id, note.text, true );
+					}
+				});
+			};
+
+			return PromiseUtils.runSequential(notes,gen);
+		})
+		.catch((other)=>
+		{
+			if( typeof other == "string" )
+				alert( other );
+			else if( other.msg )
+				alert( other.msg );
+		});
+
+	});
+
+	Utils.getById('sync-upload').addEventListener('click',(evt)=>
+	{
+		Utils.stopEvent( evt );
+
+		db.getBackupJson()
+		.then((content)=>
+		{
+			return db.getBackupPreferences('google-drive')
+			.then(( file_info )=>
+			{
+				if( file_info )
+				{
+					return google.updateFile( file_info.id, 'Ants editor backup','ant-backup.json',content,'application/json')
+			.then((result)=>
+			{
+				console.log('Success',result);
+					});
+				}
+				else
+			{
+					return google.uploadFile('Ants editor backup','ant-backup.json',content,'application/json')
+					.then((result)=>
+					{
+						console.log('Success',result);
+					});
+				}
+			});
+		})
+		.catch((other)=>
+		{
+			if( typeof other == "string" )
+				alert( other );
+			else if( other.msg )
+					alert( other.msg );
+		});
+	});
+
+
 	Util.getById('sync-google').addEventListener('click',(evt)=>
 	{
 		Util.stopEvent( evt );
