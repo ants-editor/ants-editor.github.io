@@ -217,7 +217,7 @@ Util.addOnLoad(()=>
 
 	Utils.getById('sync-donwload').addEventListener('click',(evt)=>
 	{
-		return db.getBackupPreferences('google-drive');
+		return db.getBackupPreferences('google-drive')
 		.then((file_info )=>
 		{
 			if( file_info )
