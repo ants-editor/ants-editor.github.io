@@ -115,7 +115,7 @@ Util.addOnLoad(()=>
 
 	Util.getById('search-input').addEventListener('keyup',(evt)=>
 	{
-		db.search( evt.target.value ).then( renderList ).catch((e)=>console.log( e ));
+		db.search( evt.target.value.toLowerCase() ).then( renderList ).catch((e)=>console.log( e ));
 	});
 
 	Util.getById('all-notes').addEventListener('page-show',(evt)=>
