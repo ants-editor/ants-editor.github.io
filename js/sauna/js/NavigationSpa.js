@@ -32,12 +32,13 @@ export default class Navigation
 
 	setPageInit( pageInit )
 	{
-		console.log('PageInitId '+pageInit );
+		if( this.debug )
+			console.log('Init with page: '+pageInit );
+
 		let old_self = this;
 
 		Util.delegateEvent('click',document.body,'a',function(evt)
 		{
-
 			let href = this.getAttribute('href');
 
 			if( ! href || href === '#')
@@ -65,6 +66,18 @@ export default class Navigation
 				Util.stopEvent( evt );
 				return;
 			}
+		});
+
+		window.addEventListener('pageshow',function(evt)
+		{
+			if( old_self.debug )
+				console.log('PageShow',evt);
+		});
+
+		window.addEventListener('pagehide',function(evt)
+		{
+			if( old_self.debug )
+				console.log('PageShow',evt);
 		});
 
 		window.addEventListener( 'popstate' , (evt)=>
@@ -302,8 +315,6 @@ export default class Navigation
 
 	pushPageFromPage( nextPageElement, currentPageElement, is_replace )
 	{
-		//currentPageElement.dispatchEvent(new CustomEvent('page-hide',{bubbles: false, detail:{}}));
-		//nextPageElement.dispatchEvent(new CustomEvent('page-show',{bubbles: false, detail:{}}));
 		this.makeTransitionPush( currentPageElement, nextPageElement, is_replace );
 	}
 
@@ -321,28 +332,30 @@ export default class Navigation
 		//XXX if( nextPage )
 		//XXX 	nextPage.onShow();
 
-		next.classList.add('noanimation');
-		setTimeout(function()
-		{
-			next.classList.remove('previous');
-			next.classList.remove('noanimation');
-			next.classList.add('active');
+		currentPageElement.dispatchEvent(new CustomEvent('page-hide',{bubbles: false, detail:{}}));
+		nextPageElement.dispatchEvent(new CustomEvent('page-show',{bubbles: false, detail:{}}));
 
-			if( !is_replace )
-				current.classList.add('previous');
+		current.popIn();
+		next.pushIn();
 
-			current.classList.remove('active');
-		},10 );
+		//next.classList.add('noanimation');
+		//setTimeout(function()
+		//{
+		//	next.classList.remove('previous');
+		//	next.classList.remove('noanimation');
+		//	next.classList.add('active');
+
+		//	if( !is_replace )
+		//		current.classList.add('previous');
+
+		//	current.classList.remove('active');
+		//},10 );
 	}
 
 	openPanelFromPage( panel, page )
 	{
 		panel.classList.add('open');
-
-
-		let type = panel.classList.contains('right') ? 'panel-open-right': 'panel-open-left';
-		document.body.classList.add( type );
-
+		document.body.classList.add('panel_open');
 	}
 
 	openPanelFromPanel( nextPanel, currentPanel )
@@ -354,8 +367,7 @@ export default class Navigation
 	pushPageFromPanel( pageElement , panel )
 	{
 		panel.classList.remove('open');
-		let type = panel.classList.contains('right') ? 'panel-open-right': 'panel-open-left';
-		document.body.classList.remove( type );
+		document.body.classList.remove('panel_open');
 
 		var currentPage = Util.getFirst('sauna-page.active');
 
@@ -399,10 +411,7 @@ export default class Navigation
 	popPageFromPanel( pageElement, panel )
 	{
 		panel.classList.remove('open');
-
-		let type = panel.classList.contains('right') ? 'panel-open-right': 'panel-open-left';
-		document.body.classList.remove( type );
-
+		document.body.classList.remove('panel_open');
 		var currentPage = Util.getFirst('sauna-page.active');
 		if( currentPage === pageElement )
 			return;
@@ -417,10 +426,14 @@ export default class Navigation
 
 	makeTransitionPop( previous ,current)
 	{
-		previous.classList.add('active');
-		previous.classList.remove('previous');
-		current.classList.remove('active');
-		current.classList.remove('previous');
+		current.dispatchEvent(new CustomEvent('page-hide',{bubbles: false, detail:{}}));
+		previous.dispatchEvent(new CustomEvent('page-show',{bubbles: false, detail:{}}));
+		previous.pushOut();
+		current.popOut();
+		//previous.classList.add('active');
+		//previous.classList.remove('previous');
+		//current.classList.remove('active');
+		//current.classList.remove('previous');
 	}
 
 	removePreviousFromStack()
@@ -439,7 +452,9 @@ export default class Navigation
 			let id = div.getAttribute('id');
 			if( !(id in ids ) )
 			{
-				console.log('Success remove Animation');
+				if( this.debug )
+					console.log('Success remove Animation');
+
 				div.classList.add('noanimation');
 				div.classList.remove('previous');
 				div.classList.remove('noanimation');
