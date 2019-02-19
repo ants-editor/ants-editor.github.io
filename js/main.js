@@ -16,19 +16,11 @@ window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
 	return false;
 };
 
-Util.addOnLoad(()=>
+let renderList = (notes)=>
 {
-	console.log('load window');
-	let db = new Notes();
-	let note  = null;
-	let list  = Util.getById('note-list');
-
-
-	let renderList =(notes)=>
+	try
 	{
-		console.log('Rendering');
-	//	console.log( notes );
-		try{
+		let list  = Util.getById('note-list');
 		let htmlStr = notes.reduce((prev,note)=>
 		{
 			let title = Util.txt2html(note.title);
@@ -55,11 +47,19 @@ Util.addOnLoad(()=>
 			}
 		},'');
 
-		//console.log( htmlStr );
 		list.innerHTML 	= htmlStr;
-		}catch(e){ console.log( e )}
+	}
+	catch(e)
+	{
+		console.log( e );
+	}
+};
 
-	};
+Util.addOnLoad(()=>
+{
+	console.log('load window');
+	let db = new Notes();
+	let note  = null;
 
 	console.log('init');
 	console.log('FOOOO');
@@ -120,7 +120,12 @@ Util.addOnLoad(()=>
 
 	Util.getById('all-notes').addEventListener('page-show',(evt)=>
 	{
-		db.getNotes(1,20).then( renderList );
+
+		let input = Util.getById('search-input');
+		if( input.value.trim() ==  '' )
+			db.getNotes(1,20).then( renderList );
+		else
+			db.search( input.value.trim().toLowerCase() ).then( renderList ).catch((e)=>console.log( e ));
 	});
 
 	Util.delegateEvent('click',document.body,'[data-navigation="back"]',()=>
@@ -303,17 +308,17 @@ Util.addOnLoad(()=>
 				if( file_info )
 				{
 					return google.updateFile( file_info.id, 'Ants editor backup','ant-backup.json',content,'application/json')
-			.then((result)=>
-			{
-				console.log('Success',result);
-					});
-				}
-				else
-			{
-					return google.uploadFile('Ants editor backup','ant-backup.json',content,'application/json')
 					.then((result)=>
 					{
 						console.log('Success',result);
+					});
+				}
+				else
+				{
+					return google.uploadFile('Ants editor backup','ant-backup.json',content,'application/json')
+					.then((result)=>
+					{
+							console.log('Success',result);
 					});
 				}
 			});
@@ -384,7 +389,8 @@ Util.addOnLoad(()=>
 
 			return google.downloadFile( file_info.id ).then((file_content)=>
 			{
-				try{
+				try
+				{
 					return Promise.resolve( file_content.result.notes );
 				}
 				catch(parseException)
