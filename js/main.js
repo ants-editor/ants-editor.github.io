@@ -1,5 +1,5 @@
 import Notes from './NotesDb.js';
-import Navigation from './sauna/js/NavigationSpa.js';
+import Navigation from './sauna/js/Navigation.js';
 import Util from './Util.js';
 import Note from './Note.js';
 import GoogleDrive from './GoogleDrive.js';
