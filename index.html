@@ -22,6 +22,7 @@
 		<!-- link media="all" rel="stylesheet" href="css/all.css"> -->
 		<script>
 			window.addEventListener('load',()=>{
+				navigator.serviceWorker.register('/sw.js');
 			    var dialogs = Array.from( document.querySelectorAll('dialog') );
 				dialogs.forEach(i=>dialogPolyfill.registerDialog( i ) );
 			});
@@ -47,7 +48,7 @@
 					</div>
 				</header>
 				<div id="note-list" class="main"></div>
-				<footer>Footer</footer>
+				<!-- footer>Footer</footer -->
 			</div>
 		</sauna-page>
 		<sauna-page id="preview-page">
