@@ -286,6 +286,10 @@ Util.addOnLoad(()=>
 
 			return PromiseUtils.runSequential(notes,gen);
 		})
+		.then(()=>
+		{
+			alert('Download Success');
+		})
 		.catch((other)=>
 		{
 			if( typeof other == "string" )
@@ -311,6 +315,7 @@ Util.addOnLoad(()=>
 					.then((result)=>
 					{
 						console.log('Success',result);
+						alert('Upload Success');
 					});
 				}
 				else
@@ -319,6 +324,7 @@ Util.addOnLoad(()=>
 					.then((result)=>
 					{
 							console.log('Success',result);
+						alert('Upload Success');
 					});
 				}
 			});
@@ -442,6 +448,7 @@ Util.addOnLoad(()=>
 					.then((result)=>
 					{
 						console.log('Success',result);
+						alert('Sync Success');
 					});
 				}
 				else
@@ -450,6 +457,7 @@ Util.addOnLoad(()=>
 					.then((result)=>
 					{
 						console.log('Success',result);
+						alert('Sync Success');
 					});
 				}
 			});

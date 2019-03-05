@@ -971,4 +971,80 @@ export default class DatabaseStore
 
 		return Promise.all( promises );
 	}
+
+	__serialize(obj)
+	{
+		if( obj instanceof Blob )
+		{
+			return new Promise((resolve,reject)=>
+			{
+				var reader = new FileReader();
+ 				reader.readAsDataURL(blob);
+ 				reader.onloadend = function() {
+ 				    resolve({ type: "blob" , data: reader.result });
+ 				};
+			});
+		}
+
+		return Promise.resolve( obj );
+	}
+
+	__getBackupFromStore( storeName )
+	{
+		return new Promise((resolve,reject)=>
+		{
+
+			let result = [];
+			let transaction = this.database.transaction([ storeName ], 'readwrite' );
+
+			transaction.onerror = (evt)=>
+			{
+				reject( evt );
+			};
+
+			transaction.onsuccess = ( evt )=>
+			{
+				if( this.debug )
+					console.log('opencursor( storeName: ',storeName,' Options:', JSON.stringify( options ), ' transaction success');
+				//resolve( evt );
+			};
+
+			transaction.oncomplete = ( evt )=>
+			{
+				if( this.debug )
+					console.log('OpenCursor('+storeName+' options:'+JSON.stringify( options )+' Transaction complete');
+			};
+
+			let store		= transaction.objectStore( storeName );
+			let request = store.openCursor();
+
+			request.onsuccess = (evt)=>
+			{
+				if( evt.target.result )
+				{
+					result.push(  evt.target.result.value );
+					evt.target.result.continue();
+				}
+				else
+				{
+					//Maybe call resolve
+					resolve( result );
+				}
+			};
+		});
+	}
+
+	createBackup()
+	{
+		let names = Array.from( this.database.objectStoreNames );
+
+		let results = {
+		};
+
+		names.forEach((storeName,index)=>{
+			results[ storeName ] = this.__getBackupFromStore( storeName );
+			});
+
+		return promiseAll( results );
+	}
 }
