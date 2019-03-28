@@ -10,6 +10,16 @@ export default class Util
 		return document.getElementById( selector );
 	}
 
+	static getFirstWithText( selector,text )
+	{
+		let elements = Array.from( document.querySelectorAll( selector ) );
+
+		if( text instanceof RegExp )
+			return elements.find( i => text.test( i.textContent) );
+
+		return elements.find( text == i.textContent );
+	}
+
 	static getFirst( selector )
 	{
 		return document.querySelector( selector );
@@ -367,6 +377,35 @@ export default class Util
 		});
 	}
 
+	static getFormData( obj )
+	{
+		let formData = new FormData();
+
+		let serialize = (obj, prefix)=>
+		{
+			let p;
+			let str = [];
+
+			for(p in obj)
+			{
+				if ( obj.hasOwnProperty( p ) )
+				{
+					var v = obj[p];
+					var is_obj = typeof v == "object";
+					var k = prefix ? prefix + "[" + (isNaN(+p) || is_obj ? p : '') + "]" : p;
+
+					if( is_obj )
+						serialize( v, k );
+					else
+						formData.append( k, v );
+				}
+			}
+		};
+
+		serialize(obj,'');
+		return formData;
+	}
+
 	static ajax(obj)
 	{
 		var xhr		= new XMLHttpRequest();
@@ -498,32 +537,7 @@ export default class Util
 
 				if( !parameters )
 				{
-					var serialize = function(obj, prefix)
-					{
-						var p;
-						var str = [];
-
-						for(p in obj)
-						{
-							if (obj.hasOwnProperty(p))
-							{
-								var v = obj[p];
-							   	var is_obj = typeof v == "object";
-								var k = prefix ? prefix + "[" + (isNaN(+p) || is_obj ? p : '') + "]" : p;
-
-								str.push
-								(
-								 	is_obj ?
-										serialize( v, k ) :
-										encodeURIComponent( k ) + "=" + encodeURIComponent( v )
-								);
-							}
-						}
-						return str.join("&");
-					};
-
-					xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-					parameters = serialize( obj.data, false );
+					parameters = Util.getFormData( obj );
 				}
 			}
 

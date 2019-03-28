@@ -232,9 +232,12 @@ export default class Navigation
 		else
 		{
 			let length = this.history.length;
-			this.processEvent( 'GO_BACK', document.location.hash );
-			this.removePreviousFromStack();
-			this.history.splice( index+1 ,  length-index);
+			if( length > 1 )
+			{
+				this.processEvent( 'GO_BACK', document.location.hash );
+				this.removePreviousFromStack();
+				this.history.splice( index+1 ,  length-index);
+			}
 		}
 	}
 
@@ -463,6 +466,26 @@ export default class Navigation
 				div.classList.remove('previous');
 				div.classList.remove('noanimation');
 			}
+		});
+	}
+
+	loadPages(pages)
+	{
+		let promises	= pages.map((i)=> fetch( i ).then( (i)=> i.text() ) );
+
+		return Promise.all( promises )
+		.then((responses)=>
+		{
+			let d 			= document.createElement('div');
+			d.innerHTML		= responses.reduce( (p,c)=> p+c, '' );
+			let allChilds	= Array.from( d.children );
+
+			allChilds.forEach( ac=>document.body.appendChild( ac ));
+
+			if( this.debug )
+				console.log('It finish Load',responses.length, responses );
+
+			return Promise.resolve( pages );
 		});
 	}
 }
