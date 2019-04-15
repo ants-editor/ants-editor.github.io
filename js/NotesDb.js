@@ -95,24 +95,28 @@ export default class NoteDb
 
 	getTermsIndex( term )
 	{
-		let bigger = term.toLowerCase().codePointAt( 0 );
-		let next = String.fromCodePoint( bigger+1 );
+		let tlower = term.toLowerCase();
 
-		return this.database.getAll('note_terms',{ index : 'term' , '>=': term.toLowerCase(), '<': next }).then(( terms )=>
+		let bigger = tlower.toLowerCase().codePointAt( tlower.length -1 );
+		let next = String.fromCodePoint( bigger+1 );
+		let biggerString = tlower.substring(0, tlower.length-1 )+next;
+		console.log( biggerString );
+
+		return this.database.getAll('note_terms',{ index : 'term' , '>=': term.toLowerCase(), '<': biggerString }).then(( terms )=>
 		{
 			terms.sort((a,b)=>
 			{
+				if( a.position == b.position )
+				{
 				if( a.term == b.term )
 				{
-					if( a.position == b.position )
-					{
 						return 0;
 					}
 
-					return a.position > b.position ? 1 : -1;
+					return a.term > b.term ? 1 : -1;
 				}
 
-				return a.term > b.term ? 1 : -1;
+				return a.position > b.position ? 1 : -1;
 			});
 
 			let keys = {};
