@@ -115,6 +115,12 @@ Util.addOnLoad(()=>
 
 	Util.getById('search-input').addEventListener('keyup',(evt)=>
 	{
+		if( evt.target.value.toLowerCase().trim() == '' )
+		{
+			db.getNotes(1,20).then( renderList );
+			return;
+		}
+
 		db.search( evt.target.value.toLowerCase() ).then( renderList ).catch((e)=>console.log( e ));
 	});
 
