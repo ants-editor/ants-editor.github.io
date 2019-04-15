@@ -10,7 +10,7 @@ export default class NoteDb
 		this.database	= new Finger
 		({
 			name		: 'notes',
-			version	: 10,
+			version	: 11,
 			stores		:{
 				note:
 				{
@@ -84,10 +84,11 @@ export default class NoteDb
 	{
 		try{
 			this.database.debug = true;
-			return this.database.init().then(()=>
+			return this.database.init().then((isUpgrade)=>
 			{
+				if( isUpgrade )
+					return this.updateAllNotes();
 				return Promise.resolve(true);
-				//return this.updateAllNotes();
 			});
 		}catch(e){console.log( e ); }
 	}
