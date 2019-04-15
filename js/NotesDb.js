@@ -83,7 +83,7 @@ export default class NoteDb
 	init()
 	{
 		try{
-			this.database.debug = true;
+			this.database.debug = false;
 			return this.database.init().then((isUpgrade)=>
 			{
 				if( isUpgrade )
