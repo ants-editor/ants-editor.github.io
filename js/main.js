@@ -16,6 +16,47 @@ window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
 	return false;
 };
 
+let renderSearch = (data)=>
+{
+	try
+	{
+		let list  = Util.getById('note-list');
+		let htmlStr = data.reduce((prev,search_item )=>
+		{
+		  let note = search_item.note
+		  let term = search_item.term;
+			let title = Util.txt2html(note.title);
+			let date_str = '';
+			let date = '';
+
+			if( 'updated' in note )
+			{
+				date_str = note.updated.toString();
+				date = date_str.substring(0,date_str.indexOf("GMT"));
+			}
+
+			if( 'is_markdown' in note && note.is_markdown )
+				return prev+`<a href="#" class="note-list-item" data-note-view="${note.id}">
+					<span class="list-item-title">${title}</span>
+					<span class="list-item-date">${term.term} ${date}</span>
+				</a>`;
+			else
+			{
+				return prev+`<a href="#" class="note-list-item" data-note-edit="${note.id}">
+					<span class="list-item-title">${title}</span>
+					<span class="list-item-date">${term.term} ${date}</span>
+				</a>`;
+			}
+		},'');
+
+		list.innerHTML 	= htmlStr;
+		}
+		catch(e)
+		{
+		  console.error('An error occourred rendering a search',e);
+		}
+};
+
 let renderList = (notes)=>
 {
 	try
@@ -121,7 +162,7 @@ Util.addOnLoad(()=>
 			return;
 		}
 
-		db.search( evt.target.value.toLowerCase() ).then( renderList ).catch((e)=>console.log( e ));
+		db.search( evt.target.value.toLowerCase() ).then( renderSearch ).catch((e)=>console.log( e ));
 	});
 
 	Util.getById('all-notes').addEventListener('page-show',(evt)=>
@@ -131,7 +172,7 @@ Util.addOnLoad(()=>
 		if( input.value.trim() ==  '' )
 			db.getNotes(1,20).then( renderList );
 		else
-			db.search( input.value.trim().toLowerCase() ).then( renderList ).catch((e)=>console.log( e ));
+			db.search( input.value.trim().toLowerCase() ).then( renderSearch ).catch((e)=>console.log( e ));
 	});
 
 	Util.delegateEvent('click',document.body,'[data-navigation="back"]',()=>

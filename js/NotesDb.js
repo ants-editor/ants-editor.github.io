@@ -10,7 +10,7 @@ export default class NoteDb
 		this.database	= new Finger
 		({
 			name		: 'notes',
-			version	: 11,
+			version	: 12,
 			stores		:{
 				note:
 				{
@@ -65,12 +65,16 @@ export default class NoteDb
 				}
 			}
 		});
-		this.database.debug = true;
+		this.database.debug = false;
 	}
 
 	updateAllNotes( notes )
 	{
-		return this.database.getAll('note',{}).then((notes)=>
+		return this.database.removeAll('note_terms',{}).then(()=>
+		{
+		  return this.database.getAll('note',{})
+		})
+		.then((notes)=>
 		{
 			let generator = (note)=>
 			{
@@ -272,7 +276,7 @@ export default class NoteDb
 			terms.meta_data.forEach( i=>i.note_id = note_id );
 			return this.database.addItems( 'note_terms',  terms.meta_data ).then(()=>
 			{
-				return new_note;
+				return note_id;
 			});
 		});
 	}
@@ -339,12 +343,20 @@ export default class NoteDb
 			return this.database.getByKey('note',ids).then((notes)=>
 			{
 				let indexes = {};
-				terms.forEach( (i,index) => indexes[ i.note_id ] = index );
-				notes.sort(( a,b ) =>
+				terms.forEach( (i,index) => indexes[ i.note_id ] ={ index: index, term: i });
+				let term_notes = [];
+
+				notes.forEach((i)=>{
+				  if( i.id in indexes )
+				    term_notes.push({ note: i, term: indexes[i.id ].term });
+				})
+
+				term_notes.sort(( a,b ) =>
 				{
-					return indexes[ a.id ] > indexes[ b.id ] ? 1 : -1;
+					return indexes[ a.note.id ] > indexes[ b.note.id ] ? 1 : -1;
 				});
-				return Promise.resolve( notes );
+
+				return Promise.resolve( term_notes );
 			});
 		});
 	}
@@ -354,7 +366,10 @@ export default class NoteDb
 		let terms = [];
 		let termDict = {};
 		let meta_data = [];
-		let allTerms = string.toLowerCase().split(/[;:,\\\/\-+{}\[\]\s\.`|?=]+/g);
+
+		let allTerms = string.toLowerCase().split(/[\b;:,\\\/\-+{}\[\]\s\.`|?="*~<>]+/g);
+
+		//let allTerms = string.toLowerCase().split(/\b/g);
 
 		allTerms.forEach((word)=>
 		{
@@ -377,7 +392,11 @@ export default class NoteDb
 
 	deleteNote(id)
 	{
+	  let note_id = parseInt( id );
+	  return this.database.removeAll('note_terms',{ 'index':'note_id', '=': note_id })
+	  .then(()=>{
 		return this.database.remove('note', parseInt(id ) );
+	  });
 	}
 
 	close()
