@@ -266,10 +266,10 @@ export default class NoteDb
 			//terms_data		: terms.data,
 			access_count	: 1
 		};
-		return this.database.addItem('note',null, obj ).then((new_note)=>
+		return this.database.addItem('note',null, obj ).then(( note_id )=>
 	{
 			let terms = this.getTerms( text );
-			terms.meta_data.forEach(i=>i.note_id = new_note.id );
+			terms.meta_data.forEach( i=>i.note_id = note_id );
 			return this.database.addItems( 'note_terms',  terms.meta_data ).then(()=>
 			{
 				return new_note;
