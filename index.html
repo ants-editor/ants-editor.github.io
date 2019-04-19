@@ -22,7 +22,10 @@
 		<!-- link media="all" rel="stylesheet" href="css/all.css"> -->
 		<script>
 			window.addEventListener('load',()=>{
+
+				if( window.navigator && window.navigator.serviceWorker )
 				navigator.serviceWorker.register('/sw.js');
+
 			    var dialogs = Array.from( document.querySelectorAll('dialog') );
 				dialogs.forEach(i=>dialogPolyfill.registerDialog( i ) );
 			});
@@ -132,7 +135,7 @@
 							<a href="#" id="page-settings-export-button" class="button">Generate backup file</a>
 						</div>
 
-						<div class="hidden">
+						<div class="">
 							<a href="#" class="page-settings-donwload-button hidden button" id="page-settings-download-button">Download File</a>
 						</div>
 						<hr>
