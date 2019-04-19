@@ -12,7 +12,7 @@ let n = new Navigation();
 n.setPageInit('all-notes');
 
 window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
-   console.log("Error occured: " + errorMsg);//or any message
+	 console.log("Error occured: " + errorMsg);//or any message
 	return false;
 };
 
@@ -20,11 +20,11 @@ let renderSearch = (data)=>
 {
 	try
 	{
-		let list  = Util.getById('note-list');
+		let list	= Util.getById('note-list');
 		let htmlStr = data.reduce((prev,search_item )=>
 		{
-		  let note = search_item.note
-		  let term = search_item.term;
+			let note = search_item.note
+			let term = search_item.term;
 			let title = Util.txt2html(note.title);
 			let date_str = '';
 			let date = '';
@@ -53,7 +53,7 @@ let renderSearch = (data)=>
 		}
 		catch(e)
 		{
-		  console.error('An error occourred rendering a search',e);
+			console.error('An error occourred rendering a search',e);
 		}
 };
 
@@ -61,7 +61,7 @@ let renderList = (notes)=>
 {
 	try
 	{
-		let list  = Util.getById('note-list');
+		let list	= Util.getById('note-list');
 		let htmlStr = notes.reduce((prev,note)=>
 		{
 			let title = Util.txt2html(note.title);
@@ -100,7 +100,7 @@ Util.addOnLoad(()=>
 {
 	console.log('load window');
 	let db = new Notes();
-	let note  = null;
+	let note	= null;
 
 	console.log('init');
 	console.log('FOOOO');
@@ -120,18 +120,18 @@ Util.addOnLoad(()=>
 	Util.delegateEvent('click',document.body,'[data-note-view]',function(evt)
 	{
 		Util.stopEvent( evt );
-		//console.log(  this.getAttribute('data-note-id')  );
-		db.getNote(  this.getAttribute('data-note-view') ).then((note)=>
+		//console.log(	this.getAttribute('data-note-id')	);
+		db.getNote(	this.getAttribute('data-note-view') ).then((note)=>
 		{
 			var md = window.markdownit(
 			{
-  				html:		 false,		// Enable HTML tags in source
-  				xhtmlOut:	 false,		// Use '/' to close single tags (<br />)
-  				breaks:	   false,		// Convert '\n' in paragraphs into <br>
-  				langPrefix:   'language-',  // CSS language prefix for fenced blocks
-  				linkify:	  true,		 // autoconvert URL-like texts to links
-  				typographer:  true,		 // Enable smartypants and other sweet transforms
-  			});	  // html / src / debug
+					html:		 false,		// Enable HTML tags in source
+					xhtmlOut:	 false,		// Use '/' to close single tags (<br />)
+					breaks:		 false,		// Convert '\n' in paragraphs into <br>
+					langPrefix:	 'language-',	// CSS language prefix for fenced blocks
+					linkify:		true,		 // autoconvert URL-like texts to links
+					typographer:	true,		 // Enable smartypants and other sweet transforms
+				});		// html / src / debug
 
 			//Replace Notes and attachments
 
@@ -169,7 +169,7 @@ Util.addOnLoad(()=>
 	{
 
 		let input = Util.getById('search-input');
-		if( input.value.trim() ==  '' )
+		if( input.value.trim() ==	'' )
 			db.getNotes(1,20).then( renderList );
 		else
 			db.search( input.value.trim().toLowerCase() ).then( renderSearch ).catch((e)=>console.log( e ));
@@ -200,13 +200,19 @@ Util.addOnLoad(()=>
 		});
 	});
 
+	Util.getById('page-settings-download-button').addEventListener('click',(evt)=>
+	{
+		evt.currentTarget.classList.add('hidden');
+	});
+
+
 	Util.getById('page-settings-import-button').addEventListener('click',(evt)=>
 	{
 
 		Util.stopEvent( evt );
 
 		var file	= document.getElementById("page-settings-import-file").files[0];
-		var reader  = new FileReader();
+		var reader	= new FileReader();
 
 		reader.readAsText(file, "UTF-8");
 		reader.onload = function (evt)
