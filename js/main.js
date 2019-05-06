@@ -23,7 +23,7 @@ let renderSearch = (data)=>
 		let list	= Util.getById('note-list');
 		let htmlStr = data.reduce((prev,search_item )=>
 		{
-			let note = search_item.note
+			let note = search_item.note;
 			let term = search_item.term;
 			let title = Util.txt2html(note.title);
 			let date_str = '';
@@ -35,18 +35,11 @@ let renderSearch = (data)=>
 				date = date_str.substring(0,date_str.indexOf("GMT"));
 			}
 
-			if( 'is_markdown' in note && note.is_markdown )
-				return prev+`<a href="#" class="note-list-item" data-note-view="${note.id}">
+			let mode = 'is_markdown' in note && note.is_markdown ? 'view' : 'edit';
+			return prev+`<a href="#" class="note-list-item" data-note-${mode}="${note.id}">
 					<span class="list-item-title">${title}</span>
 					<span class="list-item-date">${term.term} ${date}</span>
 				</a>`;
-			else
-			{
-				return prev+`<a href="#" class="note-list-item" data-note-edit="${note.id}">
-					<span class="list-item-title">${title}</span>
-					<span class="list-item-date">${term.term} ${date}</span>
-				</a>`;
-			}
 		},'');
 
 		list.innerHTML 	= htmlStr;
@@ -74,18 +67,12 @@ let renderList = (notes)=>
 				date = date_str.substring(0,date_str.indexOf("GMT"));
 			}
 
-			if( 'is_markdown' in note && note.is_markdown )
-				return prev+`<a href="#" class="note-list-item" data-note-view="${note.id}">
+			let mode = 'is_markdown' in note && note.is_markdown ? 'view' : 'edit';
+
+			return prev+`<a href="#" class="note-list-item" data-note-${mode}="${note.id}">
 					<span class="list-item-title">${title}</span>
 					<span class="list-item-date">${date}</span>
 				</a>`;
-			else
-			{
-				return prev+`<a href="#" class="note-list-item" data-note-edit="${note.id}">
-					<span class="list-item-title">${title}</span>
-					<span class="list-item-date">${date}</span>
-				</a>`;
-			}
 		},'');
 
 		list.innerHTML 	= htmlStr;
@@ -205,7 +192,6 @@ Util.addOnLoad(()=>
 		evt.currentTarget.classList.add('hidden');
 	});
 
-
 	Util.getById('page-settings-import-button').addEventListener('click',(evt)=>
 	{
 
@@ -215,36 +201,13 @@ Util.addOnLoad(()=>
 		var reader	= new FileReader();
 
 		reader.readAsText(file, "UTF-8");
-		reader.onload = function (evt)
+		reader.onload = (evt)=>
 		{
 			//document.getElementById("fileContents").innerHTML = evt.target.result;
 			try
 			{
 				let obj= JSON.parse( evt.target.result );
-
-				let gen = (note)=>
-				{
-					return db.getNote( note.id ).then((a)=>
-					{
-						let date = new Date( note.updated );
-
-						if( !a || date > a.updated )
-							return db.saveNote( note.id, note.text );
-
-						return Promise.resolve( 1 );
-					});
-				};
-
-				PromiseUtils.runSequential( obj.notes, gen )
-				.then(()=>
-				{
-					alert('Import success');
-				})
-				.catch((e)=>
-				{
-					console.log('Error on importing', e);
-					alert('An error occourred please try again later');
-				});
+				return db.syncNotes( obj.notes );
 			}
 			catch(fileerror)
 			{
@@ -318,26 +281,7 @@ Util.addOnLoad(()=>
 			if( notes.length === 0 )
 				return Promise.resolve( true );
 
-			let gen = (note)=>
-			{
-				return db.getNote(note.id).then((n)=>
-				{
-					if( n )
-					{
-						let date = new Date( note.updated );
-						if( date > n.updated )
-							return db.saveNote( note.id, note.text, false );
-
-						return Promise.resolve( 1 );
-					}
-					else
-					{
-						return db.saveNote( note.id, note.text, true );
-					}
-				});
-			};
-
-			return PromiseUtils.runSequential(notes,gen);
+			return db.syncNotes(notes);
 		})
 		.then(()=>
 		{
@@ -464,26 +408,29 @@ Util.addOnLoad(()=>
 			if( notes.length === 0 )
 				return Promise.resolve( true );
 
-			let gen = (note)=>
+			db.transaction(['note','note_terms'],(stores,txt)=>
 			{
-				return db.getNote(note.id).then((n)=>
+				let promises = [];
+				notes.forEach((note)=>
+				{
+					promises.push( stores.get( note.id ).then((n)=>
 				{
 					if( n )
 					{
 						let date = new Date( note.updated );
 						if( date > n.updated )
-							return db.saveNote( note.id, note.text, false );
+								return db.updateNoteStore( stores, n, note.text );
 
 						return Promise.resolve( 1 );
 					}
 					else
 					{
-						return db.saveNote( note.id, note.text, true );
+							return db.updateNoteStore( stores, note, note.text );
 					}
+					}));
 				});
-			};
-
-			return PromiseUtils.runSequential(notes,gen);
+				return Promise.All( promises );
+			});
 		})
 		.then(()=>
 		{
@@ -524,7 +471,4 @@ Util.addOnLoad(()=>
 		});
 	});
 });
-
-
-
 

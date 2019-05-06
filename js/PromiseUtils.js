@@ -95,9 +95,7 @@ export default class PromiseUtils
 			promises.push( object[ i ] );
 		}
 
-		return new Promise((resolve,reject)=>
-		{
-			Promise.all( promises ).then
+		return Promise.all( promises ).then
 			(
 			 	(values)=>
 				{
@@ -107,14 +105,9 @@ export default class PromiseUtils
 						obj[ index[ i ] ] = values [ i ];
 					}
 
-					resolve( obj );
-				},
-				(reason)=>
-				{
-					reject( reason );
+				return obj;
 				}
 			);
-		});
 	}
 
 	/*
