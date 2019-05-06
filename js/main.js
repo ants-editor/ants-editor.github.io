@@ -98,7 +98,11 @@ Util.addOnLoad(()=>
 		console.log('getting notes');
 		//db.getNotes(1,20).then( renderList );
 
-	}).catch((foo)=>{console.log(foo);});
+	})
+	.catch((foo)=>
+	{
+		console.log(foo);
+	});
 
 	console.log("BAR");
 
