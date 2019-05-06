@@ -285,7 +285,7 @@ export default class NoteDb
 
 	updateNoteStore(stores, oldNote, text )
 	{
-		if( oldNote && 'text' in oldNote && oldNote.text.trim() === text )
+		if( text.trim() === '' )
 			return Promise.resolve();
 
 		let new_note	= this.getNoteFromText( text );
