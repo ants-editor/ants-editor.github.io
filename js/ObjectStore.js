@@ -134,6 +134,7 @@ export default class ObjectStore
 			}
 
 			let request = this.store.get( key );
+			let request.onerror = reject;
 
 			request.onsuccess = ()=>
 			{
