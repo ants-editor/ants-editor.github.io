@@ -93,12 +93,11 @@ Util.addOnLoad(()=>
 	console.log('FOOOO');
 	db.init().then(()=>
 	{
-		console.log('Init');
-
-		console.log('getting notes');
-		db.getNotes(1,20).then( renderList );
-
 		note = new Note( n, db );
+		console.log('Init');
+		console.log('getting notes');
+		//db.getNotes(1,20).then( renderList );
+
 	}).catch((foo)=>{console.log(foo);});
 
 	console.log("BAR");
