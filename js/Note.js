@@ -6,7 +6,7 @@ export default class Note
 {
 	constructor(nav,notes_db)
 	{
-		this.debug = true;
+		this.debug = false;
 		this.nav = nav;
 		this.notes_db = notes_db;
 		this.id_input = Util.getById('note-id');

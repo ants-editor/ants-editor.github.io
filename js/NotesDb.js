@@ -13,7 +13,7 @@ export default class NoteDb
 			'backup':'id'
 		});
 
-		this.database.debug = true;
+		this.database.debug = false;
 	}
 
 	updateAllNotes( notes )
