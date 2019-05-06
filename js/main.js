@@ -417,19 +417,19 @@ Util.addOnLoad(()=>
 				notes.forEach((note)=>
 				{
 					promises.push( stores.get( note.id ).then((n)=>
-				{
-					if( n )
 					{
-						let date = new Date( note.updated );
-						if( date > n.updated )
+						if( n )
+						{
+							let date = new Date( note.updated );
+							if( date > n.updated )
 								return db.updateNoteStore( stores, n, note.text );
 
-						return Promise.resolve( 1 );
-					}
-					else
-					{
+							return Promise.resolve( 1 );
+						}
+						else
+						{
 							return db.updateNoteStore( stores, note, note.text );
-					}
+						}
 					}));
 				});
 				return Promise.All( promises );
@@ -437,6 +437,7 @@ Util.addOnLoad(()=>
 		})
 		.then(()=>
 		{
+			console.log("Saved Notes");
 			//return google.getFileMetadata( response.result.files[0].id );
 			return db.getBackupJson();
 		})
@@ -467,6 +468,7 @@ Util.addOnLoad(()=>
 		})
 		.catch((other)=>
 		{
+			console.log("Error",other);
 			if( typeof other == "string" )
 				alert( other );
 			else if( other.msg )
