@@ -7,7 +7,7 @@ export default class NoteDb
 {
 	constructor()
 	{
-		this.database	= Finger.builder('notes',20,{
+		this.database	= Finger.builder('notes',21,{
 			'note':'id,title,search,*tags,updated,access_count',
 			'note_terms':'++id,note_id,term',
 			'backup':'id'
