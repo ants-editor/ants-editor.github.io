@@ -410,30 +410,7 @@ Util.addOnLoad(()=>
 		{
 			if( notes.length === 0 )
 				return Promise.resolve( true );
-
-			db.transaction(['note','note_terms'],(stores,txt)=>
-			{
-				let promises = [];
-				notes.forEach((note)=>
-				{
-					promises.push( stores.get( note.id ).then((n)=>
-					{
-						if( n )
-						{
-							let date = new Date( note.updated );
-							if( date > n.updated )
-								return db.updateNoteStore( stores, n, note.text );
-
-							return Promise.resolve( 1 );
-						}
-						else
-						{
-							return db.updateNoteStore( stores, note, note.text );
-						}
-					}));
-				});
-				return Promise.All( promises );
-			});
+			return db.syncNotes( notes );
 		})
 		.then(()=>
 		{
