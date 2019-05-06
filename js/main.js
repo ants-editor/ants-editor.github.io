@@ -96,7 +96,7 @@ Util.addOnLoad(()=>
 		note = new Note( n, db );
 		console.log('Init');
 		console.log('getting notes');
-		//db.getNotes(1,20).then( renderList );
+		db.getNotes(1,20).then( renderList );
 
 	})
 	.catch((foo)=>
