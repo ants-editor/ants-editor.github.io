@@ -20,11 +20,7 @@ export default class NoteDb
 	{
 		return  this.database.transaction(['note','note_terms'],'readwrite',(stores,txt)=>
 		{
-			return stores.note_terms.clear().then(()=>
-			{
-				return this.database.getAll('note');
-			})
-			.then((notes)=>
+			return this.database.getAll('note').then((notes)=>
 			{
 				let promises = [];
 				notes.forEach(i=>promises.push(this.updateNoteStore(stores,i,i.text)));
