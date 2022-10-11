@@ -412,7 +412,7 @@ Util.addOnLoad(()=>
 		{
 			if( notes.length === 0 )
 				return Promise.resolve( true );
-			return db.syncNotes( notes );
+			return db.syncFastNotes( notes );
 		})
 		.then(()=>
 		{
