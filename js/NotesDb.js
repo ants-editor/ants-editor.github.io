@@ -41,7 +41,7 @@ export default class NoteDb
 			new_note.id = old_note.id;
 			new_note.access_count = old_note.access_count+1;
 
-			let terms = this.getTerms(old_note.text).map((t)=>
+			let terms = this.getTerms(old_note.text).terms.map((t)=>
 			{
 				t.note_id = old_note.id;
 				return t;//Note_Term
