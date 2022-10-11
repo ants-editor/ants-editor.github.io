@@ -51,7 +51,7 @@ export default class NoteDb
 			new_terms.push( ...terms );
 		}
 
-		return this.database.transaction(['notes','note_terms'],'readwrite',(stores,txt)=>
+		return this.database.transaction(['note','note_terms'],'readwrite',(stores,txt)=>
 		{
 			return Promise.all
 			([
