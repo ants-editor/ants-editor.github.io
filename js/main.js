@@ -210,7 +210,9 @@ Util.addOnLoad(()=>
 			try
 			{
 				let obj= JSON.parse( evt.target.result );
-				return db.syncNotes( obj.notes );
+				//return db.syncNotes( obj.notes );
+				return db.syncFastNotes( obj.notes );
+
 			}
 			catch(fileerror)
 			{

@@ -29,6 +29,44 @@ export default class NoteDb
 		});
 	}
 
+	syncFastNotes(notes)
+	{
+		let new_notes = [];
+		let new_terms = [];
+
+		for(let old_note of notes)
+		{
+			let new_note = this.getNoteFromText( old_note.text );
+			new_note.updated = new Date();
+			new_note.id = old_note.id;
+			new_note.access_count = old_note.access_count+1;
+
+			let terms = this.getTerms(old_note.text).map((t)=>
+			{
+				t.note_id = old_note.id;
+				return t;//Note_Term
+			});
+
+			new_notes.push( new_note );
+			new_terms.push( ...terms );
+		}
+
+		return this.database.transaction(['notes','note_terms'],'readwrite',(stores,txt)=>
+		{
+			return Promise.all
+			([
+				stores['notes'].updateAll( notes ),
+				stores['note_terms'].clear()
+				.then(()=>
+				{
+					return stores['note_terms'].addAllFast( new_terms, false );
+				})
+			]).then(()=>{
+				console.log('Ends txt',txt);
+			});
+		});
+	}
+
 	syncNotes(notes)
 	{
 		return this.database.transaction(['note','note_terms'],'readwrite',(stores,txt)=>
