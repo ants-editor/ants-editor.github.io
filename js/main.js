@@ -210,8 +210,8 @@ Util.addOnLoad(()=>
 			try
 			{
 				let obj= JSON.parse( evt.target.result );
-				//return db.syncNotes( obj.notes );
-				return db.syncFastNotes( obj.notes );
+				return db.syncNotes( obj.notes );
+				//return db.syncFastNotes( obj.notes );
 
 			}
 			catch(fileerror)
@@ -412,7 +412,8 @@ Util.addOnLoad(()=>
 		{
 			if( notes.length === 0 )
 				return Promise.resolve( true );
-			return db.syncFastNotes( notes );
+			//return db.syncFastNotes( notes );
+			return db.syncNotes( notes );
 		})
 		.then(()=>
 		{
