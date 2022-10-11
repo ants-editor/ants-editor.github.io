@@ -55,7 +55,7 @@ export default class NoteDb
 		{
 			return Promise.all
 			([
-				stores['notes'].updateAll( notes ),
+				stores['note'].updateAll( notes ),
 				stores['note_terms'].clear()
 				.then(()=>
 				{
